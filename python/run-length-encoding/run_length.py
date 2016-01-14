@@ -1,8 +1,8 @@
 def encode(source):
-    count = 1 # including first letter
-    pivot = 1
+    pivot = 0
     result = ""
     while pivot < len(source):
+        count = 0
         char = source[pivot]
         while  pivot < len(source) and char == source[pivot]:
             count += 1
@@ -11,12 +11,11 @@ def encode(source):
             result += str(count) + char
         else:
             result += char
-        count = 0
     return result
 
 def decode(source):
     result = ""
-    number = "0"
+    number = ""
     for char in source:
         if char.isdigit():
             number += char
