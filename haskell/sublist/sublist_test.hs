@@ -36,7 +36,7 @@ sublistTests =
   , testCase "partially matching sublist at start" $ do
     Sublist @=? sublist "112" "1112"
   , testCase "sublist early in huge list" $ do
-    Sublist @=? sublist [3, 4, 5] [1 .. 1000000 :: Int] 
+    Sublist @=? sublist [3, 4, 5] [1 .. 1000000 :: Int]
   , testCase "huge sublist not in huge list" $ do
     Unequal @=? sublist [10 .. 1000001] [1 .. 1000000 :: Int]
   , testCase "superlist at start" $ do
