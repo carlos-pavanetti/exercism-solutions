@@ -12,4 +12,14 @@ def encode(source):
     return result
 
 def decode(source):
-    return ""
+    result = ""
+    number = "0"
+    looking_for = "DIGIT"
+    for char in source:
+        if char.isdigit():
+            number += char
+        else:
+            number = int(number)
+            result += (char * number)
+            number = ""
+    return result
