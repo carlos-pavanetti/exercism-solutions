@@ -1,5 +1,6 @@
 module LeapYear(isLeapYear) where
     isLeapYear :: Int -> Bool
     isLeapYear year
-        | year `mod` 100 == 0 = (year `mod` 400 == 0)
-        | otherwise = (year `mod` 4 == 0)
+        | year `isDividedBy` 100 = year `isDividedBy` 400
+        | otherwise = year `isDividedBy` 4
+        where isDividedBy a b = a `mod` b == 0
