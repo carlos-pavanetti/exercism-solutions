@@ -1,29 +1,33 @@
+from itertools import groupby
+
 def encode(source):
-    pivot = 0
     result = ""
-    while pivot < len(source):
-        count = 0
-        char = source[pivot]
-        while  pivot < len(source) and char == source[pivot]:
-            count += 1
-            pivot += 1
-        if count > 1:
-            result += str(count) + char
+    grouped = groupby(source)
+    for k, g in grouped:
+        groupSize = len(list(g))
+        if groupSize > 1:
+            result += str(groupSize) + k
         else:
-            result += char
+            result += k
     return result
 
 def decode(source):
     result = ""
-    number = ""
-    for char in source:
-        if char.isdigit():
-            number += char
+    number = 1
+    grouped = groupby(source, str.isdigit)
+    for is_digit_group, values in grouped:
+        values = list(values)
+        values.reverse()
+        
+        if is_digit_group:
+            number = 0
+            pow10  = 1
+            for digit in values:
+                number += int(digit) * pow10
+                pow10 *= 10
         else:
-            if len(number) > 0:
-                number = int(number)
-            else:
-                number = 1
-            result += (char * number)
-            number = ""
+            char = values.pop()
+            result += char * number
+            while len(values) > 0:
+                result += values.pop()
     return result
