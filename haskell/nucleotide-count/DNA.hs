@@ -6,14 +6,29 @@ import Text.Printf(printf)
 count :: Char -> String -> Int
 count nucleotide strand
     | invalidNucleotide nucleotide = invalidNucleotideError nucleotide
-    | any invalidNucleotide strand  = invalidNucleotideError (getInvalidNucleotide strand)
+    | invalidStrand strand = invalidStrandError strand
     | otherwise = length . filter (== nucleotide) $ strand
-    where
-        validNucleotide x = x `elem` "ATCG"
-        invalidNucleotide = not . validNucleotide
-        getInvalidNucleotide = head . filter invalidNucleotide
-        invalidNucleotideError = error . printf "invalid nucleotide '%c'"
 
 nucleotideCounts :: String -> Map.Map Char Int
--- nucleotideCounts = fromList . map (\gss@(g:_) -> (g, length gss)) . group . sort
-nucleotideCounts strand = Map.fromList (map (\x -> (x, count x strand)) "ATCG")
+nucleotideCounts strand
+    | invalidStrand strand = invalidStrandError strand
+    | otherwise = Map.fromList (map (\x -> (x, count x strand)) "ATCG")
+
+--------------------------------------------------------------------------------
+-- Validate helpers
+validNucleotide :: Char -> Bool
+validNucleotide = (`elem` "ATCG")
+
+invalidNucleotide :: Char -> Bool
+invalidNucleotide = not . validNucleotide
+
+invalidStrand :: String -> Bool
+invalidStrand = any invalidNucleotide
+
+--------------------------------------------------------------------------------
+-- Error helpers
+invalidNucleotideError :: Char -> a
+invalidNucleotideError = error . printf "invalid nucleotide '%c'"
+
+invalidStrandError :: String -> a
+invalidStrandError = invalidNucleotideError . head . filter invalidNucleotide
