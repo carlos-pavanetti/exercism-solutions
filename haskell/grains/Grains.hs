@@ -1,7 +1,7 @@
 module Grains(square, total) where
 
-square :: Integer -> Integer
+square :: (Integral b, Num c) => b -> c
 square = (2^) . (+ (-1))
 
 total :: Integer
-total = sum . map square $ [1..64]
+total = (\n -> (2^n) - 1) 64
