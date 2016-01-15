@@ -1,6 +1,5 @@
 module LeapYear(isLeapYear) where
-    isLeapYear :: Int -> Bool
-    isLeapYear year
-        | year `isDividedBy` 100 = year `isDividedBy` 400
-        | otherwise = year `isDividedBy` 4
-        where isDividedBy a b = a `mod` b == 0
+
+import qualified Data.Time.Calendar as Calendar
+isLeapYear :: Integer -> Bool
+isLeapYear = Calendar.isLeapYear
