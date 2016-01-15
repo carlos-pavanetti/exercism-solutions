@@ -1,13 +1,15 @@
 module Bob(responseFor) where
 
-import Data.Text(stripEnd, pack, unpack)
-import Data.Char(isLower, isUpper)
+import Data.List(dropWhileEnd)
+import Data.Char(isLower, isUpper, isSpace)
 
 responseFor :: String -> String
-responseFor question = respond (unpack (stripEnd (pack question)))
+responseFor = answer . rstrip
     where
-        respond question
+        rstrip = dropWhileEnd isSpace
+        answer question
             | question == "" = "Fine. Be that way!"
-            | any isUpper question && not (any isLower question) = "Whoa, chill out!"
+            | yell question = "Whoa, chill out!"
             | last question == '?' = "Sure."
             | otherwise = "Whatever."
+        yell question = any isUpper question && not (any isLower question)
