@@ -5,14 +5,16 @@ import Text.Printf(printf)
 
 number :: String -> String
 number unsafeNumber
-    | length safeNumber < 10 = "0000000000"
+    | length safeNumber < 10 = badNumber
     | length safeNumber == 11 =
         if head safeNumber == '1' then
             tail safeNumber
-        else "0000000000"
-    | length safeNumber > 11 = "0000000000"
+        else badNumber
+    | length safeNumber > 11 = badNumber
     | otherwise = safeNumber
-    where safeNumber = clearNumber unsafeNumber
+    where
+        safeNumber = clearNumber unsafeNumber
+        badNumber = "0000000000"
 
 areaCode :: String -> String
 areaCode = take 3 . number
