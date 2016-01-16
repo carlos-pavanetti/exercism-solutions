@@ -5,7 +5,8 @@ import Data.List(sort, group)
 import Data.Map(Map, fromList)
 
 wordCount :: String -> Map String Int
-wordCount = fromList . map (\xs@(x:_) -> (x, length xs)) . group . sort . toWords . map toLower
+wordCount = fromList . packGroup . group . sort . toWords . map toLower
+    where packGroup = map (\xs@(x:_) -> (x, length xs))
 
 toWords :: String -> [String]
 toWords s = case dropWhile blacklist s of
