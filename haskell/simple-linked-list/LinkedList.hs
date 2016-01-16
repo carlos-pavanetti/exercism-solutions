@@ -25,4 +25,7 @@ fromList :: [a] -> LinkedList a
 fromList = foldr Node Nil
 
 reverseLinkedList :: LinkedList a -> LinkedList a
-reverseLinkedList = fromList . reverse . toList
+reverseLinkedList = reverseAux Nil
+    where
+        reverseAux acc Nil = acc
+        reverseAux acc (Node value nxt) = reverseAux (Node value acc) nxt
