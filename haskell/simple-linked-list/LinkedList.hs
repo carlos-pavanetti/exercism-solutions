@@ -6,6 +6,9 @@ module LinkedList (
 ) where
 
 data LinkedList a = Nil | Node { datum :: a, next :: LinkedList a } deriving (Show)
+instance Foldable LinkedList where
+    foldr _ acc Nil = acc
+    foldr f acc (Node value nxt) = f value (foldr f acc nxt)
 
 nil :: LinkedList a
 nil = Nil
@@ -25,7 +28,4 @@ fromList :: [a] -> LinkedList a
 fromList = foldr Node Nil
 
 reverseLinkedList :: LinkedList a -> LinkedList a
-reverseLinkedList = reverseAux Nil
-    where
-        reverseAux acc Nil = acc
-        reverseAux acc (Node value nxt) = reverseAux (Node value acc) nxt
+reverseLinkedList = foldl (flip Node) Nil
