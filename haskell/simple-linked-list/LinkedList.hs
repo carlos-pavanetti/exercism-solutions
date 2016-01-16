@@ -21,8 +21,7 @@ new :: a -> LinkedList a -> LinkedList a
 new = Node
 
 toList :: LinkedList a -> [a]
-toList Nil = []
-toList (Node value nxt) = value : toList nxt
+toList = foldr (:) []
 
 fromList :: [a] -> LinkedList a
 fromList = foldr Node Nil
