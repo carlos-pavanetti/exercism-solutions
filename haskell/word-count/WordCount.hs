@@ -1,17 +1,15 @@
 module WordCount(wordCount) where
 
 import Data.Char
-import Data.List(sort, group)
-import Data.Map(Map, fromList)
+import Data.List.Split(splitWhen)
+import qualified Data.Map as Map
 
-wordCount :: String -> Map String Int
-wordCount = fromList . packGroup . group . sort . toWords . map toLower
-    where packGroup = map (\xs@(x:_) -> (x, length xs))
+wordCount :: String -> Map.Map String Int
+wordCount = foldr (Map.alter increment) Map.empty . toWords . map toLower
+    where
+        increment Nothing  = Just 1
+        increment (Just x) = Just (x + 1)
 
 toWords :: String -> [String]
-toWords s = case dropWhile blacklist s of
-    "" -> []
-    s' -> w : toWords s''
-        where (w, s'') = break blacklist s'
-    where
-        blacklist c = isSymbol c || isPunctuation c || isSpace c
+toWords = filter (not . null) . splitWhen blacklist
+    where blacklist c = isSymbol c || isPunctuation c || isSpace c
