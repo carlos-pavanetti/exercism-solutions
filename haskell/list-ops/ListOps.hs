@@ -14,7 +14,7 @@ import Prelude hiding
 
 foldl' :: (b -> a -> b) -> b -> [a] -> b
 foldl' _ acc [] = acc
-foldl' f acc (x:xs) = foldl' f ((f $! acc) x) xs
+foldl' f acc (x:xs) = seq (f acc x) foldl' f (f acc x) xs
 
 foldr :: (a -> b -> b) -> b -> [a] -> b
 foldr _ acc [] = acc
@@ -25,8 +25,7 @@ length [] = 0
 length (_:xs) = length xs + 1
 
 reverse :: [a] -> [a]
-reverse [] = []
-reverse (x:xs) = reverse xs ++ [x]
+reverse = foldl (flip (:)) []
 
 map :: (a -> b) -> [a] -> [b]
 map _ [] = []
