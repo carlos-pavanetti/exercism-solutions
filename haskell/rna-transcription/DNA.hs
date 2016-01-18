@@ -1,12 +1,12 @@
 module DNA(toRNA) where
 
-transcriteRNA :: Char -> Char
-transcriteRNA x
-    | x == 'G' = 'C'
-    | x == 'C' = 'G'
-    | x == 'T' = 'A'
-    | x == 'A' = 'U'
-    | otherwise = x
+transcribeRNA :: Char -> Char
+transcribeRNA x = case x of
+    'G' -> 'C'
+    'C' -> 'G'
+    'T' -> 'A'
+    'A' -> 'U'
+    otherwise -> error ("invalid nucleotide " ++ [x])
 
 toRNA :: String -> String
-toRNA = map transcriteRNA
+toRNA = map transcribeRNA
