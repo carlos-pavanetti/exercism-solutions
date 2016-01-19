@@ -29,8 +29,11 @@ meetupDay sch wd yy mm
             meetupDay Third wd yy mm
         else
             meetupDay Second wd yy mm
-    | otherwise = error "Not yet implemented"
-    -- | when Last   = _
+    | otherwise =
+        if fstWd + 28 > Calendar.gregorianMonthLength yy mm then
+            toGregrorianDay (21 + fstWd)
+        else
+            toGregrorianDay (28 + fstWd)
     where
         when = (== sch)
         toGregrorianDay = Calendar.fromGregorian yy mm
