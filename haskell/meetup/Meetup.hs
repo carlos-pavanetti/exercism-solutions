@@ -20,16 +20,21 @@ data Schedule = First | Second | Third | Fourth | Teenth | Last
 
 meetupDay :: Schedule -> Weekday -> Year -> Month -> Calendar.Day
 meetupDay sch wd yy mm
-    | when First  = toGregrorianDay (     firstWeekday wd yy mm)
-    | when Second = toGregrorianDay ( 7 + firstWeekday wd yy mm)
-    | when Third  = toGregrorianDay (14 + firstWeekday wd yy mm)
-    | when Fourth = toGregrorianDay (21 + firstWeekday wd yy mm)
-    | otherwise = error "TO FAZENDO!!!"
+    | when First  = toGregrorianDay fstWd
+    | when Second = toGregrorianDay ( 7 + fstWd)
+    | when Third  = toGregrorianDay (14 + fstWd)
+    | when Fourth = toGregrorianDay (21 + fstWd)
+    | when Teenth =
+        if fstWd < 6 then
+            meetupDay Third wd yy mm
+        else
+            meetupDay Second wd yy mm
+    | otherwise = error "Not yet implemented"
     -- | when Last   = _
-    -- | when Teenth = _
     where
         when = (== sch)
         toGregrorianDay = Calendar.fromGregorian yy mm
+        fstWd = firstWeekday wd yy mm
 
 weekdayFirstDay :: Year -> Month -> Day
 weekdayFirstDay yy mm = thd3 (toWeekDate (Calendar.fromGregorian yy mm 01))
