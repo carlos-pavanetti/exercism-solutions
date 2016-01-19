@@ -42,12 +42,8 @@ meetupDay sch wd yy mm
     | when Second = toGregrorianDay ( 7 + fstWd)
     | when Third  = toGregrorianDay (14 + fstWd)
     | when Fourth = toGregrorianDay (21 + fstWd)
-    | when Teenth =
-        if fstWd <= weekdayToIso Friday then
-            meetupDay Third wd yy mm
-        else
-            meetupDay Second wd yy mm
-    | otherwise = toGregrorianDay (lastWeekday wd yy mm)
+    | when Teenth = toGregrorianDay (13 + succ fstWd `rem` 7)
+    | otherwise   = toGregrorianDay (lastWeekday wd yy mm)
     where
         when = (== sch)
         toGregrorianDay = Calendar.fromGregorian yy mm
