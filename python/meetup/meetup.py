@@ -19,9 +19,9 @@ def meetup_day(year, month, weekday, order):
 
 
 def first_weekday(year, month, weekday):
-    for day in range(1, 8):
-        if date(year, month, day).isoweekday() == weekday_to_int(weekday):
-            return day
+    firstDayOfMonth = date(year, month, 1)
+    diffWeekdays = weekday_to_int(weekday) - firstDayOfMonth.isoweekday()
+    return diffWeekdays % 7 + 1
 
 
 def last_weekday(year, month, weekday):
