@@ -18,7 +18,7 @@ bottle 1 = "1 bottle"
 bottle x = show x ++ " bottles"
 
 sing :: Int -> Int -> String
-sing i j = concatMap ((++ "\n") . verse) [i,i-1..j]
+sing i j = foldr (\x acc -> concat [verse x, "\n", acc]) [] (reverse [j..i])
 
 capitalize :: String -> String
 capitalize [] = []
