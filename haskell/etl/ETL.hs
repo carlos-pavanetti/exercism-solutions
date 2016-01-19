@@ -2,7 +2,6 @@ module ETL(transform) where
 
 import Data.Char(toLower)
 import qualified Data.Map as M
-import Control.Arrow(first)
 
 type Value = Int
 type Letter = String
@@ -11,7 +10,10 @@ type OldScoreSet = M.Map Value [Letter]
 type NewScoreSet = M.Map Letter Value
 
 transform :: OldScoreSet -> NewScoreSet
-transform = M.fromList . concatMap (lowerKey . transformEach) . M.toList
+transform = M.foldrWithKey transformEach M.empty
+
+transformEach :: Value -> [Letter] -> NewScoreSet -> NewScoreSet
+transformEach score letters nss = foldr foldDownCase nss letters
     where
-    transformEach (s, ls) = zip ls (repeat s)
-    lowerKey = map (first (map toLower))
+    foldDownCase :: Letter -> NewScoreSet -> NewScoreSet
+    foldDownCase = (`M.insert` score) . map toLower
