@@ -32,9 +32,10 @@ def last_weekday(year, month, weekday):
 
 
 def weekday_to_int(weekday):
-    if weekday in weekday_to_int_table:
+    try:
         return weekday_to_int_table[weekday]
-    raise Exception(weekday + " is not a valid weekday")
+    except:
+        raise Exception(weekday + " is not a valid weekday")
 
 weekday_to_int_table = {"Monday": 1, "Tuesday": 2, "Wednesday": 3,
                         "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7}
