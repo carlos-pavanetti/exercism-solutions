@@ -1,6 +1,6 @@
 module Robot(robotName, mkRobot, resetName) where
 
-import Control.Monad (liftM)
+import Control.Monad (liftM, replicateM)
 import Control.Concurrent (MVar, newMVar, readMVar, modifyMVar_)
 import System.Random (randomRIO)
 
@@ -16,7 +16,10 @@ resetName :: Robot -> IO ()
 resetName (Robot name) = modifyMVar_ name (const generateNewName)
 
 generateNewName :: IO String
-generateNewName = mapM randomRIO [alpha, alpha, num, num, num]
+generateNewName = do
+    a2 <- replicateM 2 (randomRIO alpha)
+    n3 <- replicateM 3 (randomRIO num)
+    return (a2 ++ n3)
     where
-    alpha = ('A', 'Z')
-    num = ('0', '9')
+        alpha = ('A', 'Z')
+        num = ('0', '9')
