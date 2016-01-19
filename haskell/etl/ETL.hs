@@ -13,7 +13,7 @@ transform :: OldScoreSet -> NewScoreSet
 transform = M.foldrWithKey transformEach M.empty
 
 transformEach :: Value -> [Letter] -> NewScoreSet -> NewScoreSet
-transformEach score letters nss = foldr foldDownCase nss letters
+transformEach score = flip (foldr newRecord)
     where
-    foldDownCase :: Letter -> NewScoreSet -> NewScoreSet
-    foldDownCase = (`M.insert` score) . map toLower
+    newRecord :: Letter -> NewScoreSet -> NewScoreSet
+    newRecord = (`M.insert` score) . map toLower
