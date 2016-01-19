@@ -3,21 +3,18 @@ from calendar import monthrange
 
 
 def meetup_day(year, month, weekday, order):
-    fwd = first_weekday(year, month, weekday)
+    fstWeekDay = first_weekday(year, month, weekday)
     if order == "teenth":
-        if fwd < 6:
-            day = fwd + 14
-        else:
-            day = fwd + 7
+        day = 13 + (fstWeekDay + 1 % 13)
+        return date(year, month, day)
 
-    elif order == "last":
-        if fwd + 28 in monthrange(year, month):
-            day = fwd + 28
-        else:
-            day = fwd + 21
-    else:
-        week = int(order[0])
-        day = first_weekday(year, month, weekday) + 7 * (week - 1)
+    if order == "last":
+        day = last_weekday(year, month, weekday)
+        return date(year, month, day)
+
+    week = int(order[0])
+    daysToMeetup = 7 * (week - 1)
+    day = fstWeekDay + daysToMeetup
     return date(year, month, day)
 
 
@@ -27,9 +24,17 @@ def first_weekday(year, month, weekday):
             return day
 
 
+def last_weekday(year, month, weekday):
+    fstWeekDay = first_weekday(year, month, weekday)
+    if fstWeekDay + 28 in monthrange(year, month):
+        return fstWeekDay + 28
+    return fstWeekDay + 21
+
+
 def weekday_to_int(weekday):
-    conversor_table = {"Monday": 1, "Tuesday": 2, "Wednesday": 3,
-                       "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7}
-    if weekday in conversor_table:
-        return conversor_table[weekday]
+    if weekday in weekday_to_int_table:
+        return weekday_to_int_table[weekday]
     raise Exception(weekday + " is not a valid weekday")
+
+weekday_to_int_table = {"Monday": 1, "Tuesday": 2, "Wednesday": 3,
+                        "Thursday": 4, "Friday": 5, "Saturday": 6, "Sunday": 7}
