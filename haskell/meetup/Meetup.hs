@@ -4,10 +4,16 @@ import Data.Tuple.Extra(thd3)
 import qualified Data.Time.Calendar as Calendar
 import Data.Time.Calendar.WeekDate(toWeekDate)
 
+--------------------------------------------------------------------------------
+-- Type Aliases
+--------------------------------------------------------------------------------
 type Year = Integer
 type Month = Int
 type Day = Int
 
+--------------------------------------------------------------------------------
+-- Weekday Enumeration
+--------------------------------------------------------------------------------
 data Weekday = Monday | Tuesday | Wednesday | Thursday |
                Friday | Saturday | Sunday deriving (Eq, Show, Read, Enum)
 
@@ -28,6 +34,12 @@ weekdayToIso = succ . fromEnum
 isoToWeekday :: Day -> Weekday
 isoToWeekday = toEnum . pred
 
+--------------------------------------------------------------------------------
+-- Schedule Enumeration
+-- Teenth refers to days ending in "-teenth":
+-- [13th - 19th] => thirTEENTH, forTEENTH, fifTEENTH, sixTEENTH,
+--                  sevenTEENTH, eighTEENTH, nineTEENTH
+--------------------------------------------------------------------------------
 data Schedule = First | Second | Third | Fourth | Teenth | Last
     deriving (Eq, Show, Read)
 
