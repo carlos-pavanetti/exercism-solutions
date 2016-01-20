@@ -19,7 +19,6 @@ def extracted_method(source, cipher_method, consume):
         try:
             for _ in range(5):
                 result += cipher_method(next(source))
-
             if consume:
                 next(source)
             else:
