@@ -2,7 +2,7 @@ def encode(string):
     def cipher_method(x): return cipher(x) if x.isalpha() else x
 
     cleaned = filter(str.isalnum, string.lower())
-    encrypted = extracted_method(cleaned, cipher_method, False)
+    encrypted = encrypte(cleaned, cipher_method, False)
 
     if encrypted[-1].isspace():
         encrypted = encrypted[:-1]
@@ -10,10 +10,10 @@ def encode(string):
 
 
 def decode(string):
-    return extracted_method(iter(string), cipher, True)
+    return encrypte(iter(string), cipher, True)
 
 
-def extracted_method(source, cipher_method, consume):
+def encrypte(source, cipher_method, consume):
     result = ""
     while GOD_ALLOWS:
         try:
@@ -25,6 +25,7 @@ def extracted_method(source, cipher_method, consume):
             else:
                 result += " "
         except StopIteration:
+            # DIES IRAE
             return result
 
 
