@@ -21,21 +21,16 @@ foldr _ acc [] = acc
 foldr f acc (x:xs) = f x (foldr f acc xs)
 
 length :: [a] -> Int
-length [] = 0
-length (_:xs) = length xs + 1
+length = foldl' (const.succ) 0
 
 reverse :: [a] -> [a]
 reverse = foldl (flip (:)) []
 
 map :: (a -> b) -> [a] -> [b]
-map _ [] = []
-map f (x:xs) = f x : map f xs
+map f = foldr ((:).f) []
 
 filter :: (a -> Bool) -> [a] -> [a]
-filter _ [] = []
-filter p (x:xs)
-    | p x = x : filter p xs
-    | otherwise = filter p xs
+filter p = foldr (\x -> if p x then (x:) else id) []
 
 (++) :: [a] -> [a] -> [a]
 xs ++ ys = foldr (:) ys xs
