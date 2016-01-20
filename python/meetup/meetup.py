@@ -5,7 +5,7 @@ from calendar import monthrange
 def meetup_day(year, month, weekday, order):
     fstWeekDay = first_weekday(year, month, weekday)
     if order == "teenth":
-        day = 13 + (fstWeekDay + 1 % 13)
+        day = 13 + ((fstWeekDay + 1) % 7)
         return date(year, month, day)
 
     if order == "last":
