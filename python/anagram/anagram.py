@@ -10,6 +10,4 @@ def is_anagrams(A, B):
 
     sortedA = sorted(lowerA)
     sortedB = sorted(lowerB)
-    if sortedA == sortedB:
-        return True
-    return False
+    return sortedA == sortedB
