@@ -16,15 +16,16 @@ class Robot(object):
         self.bearing = (self.bearing - 1) % 4
 
     def advance(self):
+        x, y = self.coordinates
         if self.bearing == NORTH:
-            self.coordinates = (self.coordinates[0], self.coordinates[1] + 1)
+            self.coordinates = (x, y+1)
         elif self.bearing == SOUTH:
-            self.coordinates = (self.coordinates[0], self.coordinates[1] - 1)
+            self.coordinates = (x, y-1)
 
         elif self.bearing == EAST:
-            self.coordinates = (self.coordinates[0] + 1, self.coordinates[1])
+            self.coordinates = (x+1, y)
         elif self.bearing == WEST:
-            self.coordinates = (self.coordinates[0] - 1, self.coordinates[1])
+            self.coordinates = (x-1, y)
 
     def simulate(self, program):
         for command in program:
