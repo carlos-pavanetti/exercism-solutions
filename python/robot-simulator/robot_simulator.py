@@ -3,8 +3,6 @@ NORTH, EAST, SOUTH, WEST = range(4)
 
 
 class Robot(object):
-    translation = [(0, 1), (1, 0), (0, -1), (-1, 0)]
-
     def __init__(self, bearing=NORTH, x=0, y=0):
         self.coordinates = (x, y)
         self.bearing = bearing
