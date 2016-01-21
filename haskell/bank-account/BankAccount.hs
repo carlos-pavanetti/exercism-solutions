@@ -4,26 +4,22 @@ module BankAccount(
     getBalance, incrementBalance
 ) where
 
-import Data.Maybe(isNothing, fromJust)
-import Control.Monad(unless)
+import Control.Monad(liftM)
 import Control.Concurrent(MVar, newMVar, readMVar, modifyMVar_)
 
 data BankAccount = BankAccount (MVar (Maybe Int))
 
 openAccount :: IO BankAccount
-openAccount = do
-    balance <- newMVar (Just 0)
-    return (BankAccount balance)
+openAccount = liftM BankAccount (newMVar (Just 0))
 
 closeAccount :: BankAccount -> IO ()
-closeAccount (BankAccount balance) = modifyMVar_ balance (\_ -> return Nothing)
+closeAccount (BankAccount balance) = modifyMVar_ balance (return.const Nothing)
 
 getBalance :: BankAccount -> IO (Maybe Int)
 getBalance (BankAccount balance) = readMVar balance
 
 incrementBalance :: BankAccount -> Int -> IO (Maybe Int)
 incrementBalance (BankAccount prevBalance) amount = do
-    balance <- readMVar prevBalance
-    unless (isNothing balance) $
-        modifyMVar_ prevBalance (return . Just . (+ amount) . fromJust)
-    readMVar prevBalance
+    newBalance <- fmap (+amount) <$> readMVar prevBalance
+    modifyMVar_ prevBalance (return.const newBalance)
+    return newBalance
