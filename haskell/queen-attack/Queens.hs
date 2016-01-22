@@ -27,5 +27,4 @@ w `canAttack` b = w `canAttackOnLine` b || w `canAttackOnColumn` b ||
     where
         canAttackOnLine (l, _) (l', _) = l == l'
         canAttackOnColumn (_, c) (_, c') = c == c'
-        canAttackOnDiagonal (l, c) (l', c') =
-            (l - c) == (l' - c') || (l + c) == (l' + c')
+        canAttackOnDiagonal (l, c) (l', c') = abs(l - l') == abs(c - c')
