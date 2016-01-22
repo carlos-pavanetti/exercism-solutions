@@ -7,4 +7,3 @@ def is_pangram(word):
         if not chr(ichar) in low_word:
             return False
     return True
-# pangram = (== 26) . length . Set.filter (`elem` ['a'..'z']) . Set.fromList . map (toLower)

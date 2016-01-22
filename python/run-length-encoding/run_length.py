@@ -1,5 +1,6 @@
 from itertools import groupby
 
+
 def encode(source):
     result = ""
     grouped = groupby(source)
@@ -11,6 +12,7 @@ def encode(source):
             result += k
     return result
 
+
 def decode(source):
     result = ""
     number = 1
@@ -18,10 +20,10 @@ def decode(source):
     for is_digit_group, values in grouped:
         values = list(values)
         values.reverse()
-        
+
         if is_digit_group:
             number = 0
-            pow10  = 1
+            pow10 = 1
             for digit in values:
                 number += int(digit) * pow10
                 pow10 *= 10
