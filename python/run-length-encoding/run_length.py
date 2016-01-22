@@ -14,22 +14,27 @@ def encode(source):
 
 
 def decode(source):
-    result = ""
     number = 1
+    decoded_string = ""
     grouped = groupby(source, str.isdigit)
-    for is_digit_group, values in grouped:
-        values = list(values)
-        values.reverse()
+    for is_digit_group, group in grouped:
+        group = list(group)
+        group.reverse()
 
         if is_digit_group:
-            number = 0
-            pow10 = 1
-            for digit in values:
-                number += int(digit) * pow10
-                pow10 *= 10
+            number = digit_group_to_number(group)
         else:
-            char = values.pop()
-            result += char * number
-            while len(values) > 0:
-                result += values.pop()
-    return result
+            char = group.pop()
+            decoded_string += char * number
+            while len(group) > 0:
+                decoded_string += group.pop()
+    return decoded_string
+
+
+def digit_group_to_number(group):
+    _10Exp = 1
+    number = 0
+    for digit in group:
+        number += int(digit) * _10Exp
+        _10Exp *= 10
+    return number
