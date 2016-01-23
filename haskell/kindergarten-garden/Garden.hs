@@ -22,8 +22,9 @@ garden children cells = zip (sort children) (splitCells cells)
             (chunksOf 2 . map letterToPlant) . lines
 
 defaultGarden :: String -> Garden
-defaultGarden = garden ["Alice", "Bob", "Charlie", "David", "Eve", "Fred",
-                "Ginny", "Harriet", "Ileana", "Joseph", "Kincaid", "Larry"]
+defaultGarden = garden . words $ students
+    where students = "Alice Bob Charlie David Eve Fred Ginny " ++
+                     "Harriet Ileana Joseph Kincaid Larry"
 
 lookupPlants :: Child -> Garden -> [Plant]
 lookupPlants child = snd . head . filter ((==child) . fst)
