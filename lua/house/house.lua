@@ -1,18 +1,16 @@
 local objects = {
-    "house that Jack built",
-    "malt", "rat", "cat", "dog",
-    "cow with the crumpled horn",
-    "maiden all forlorn",
-    "man all tattered and torn",
-    "priest all shaven and shorn",
-    "rooster that crowed in the morn",
-    "farmer sowing his corn",
-    "horse and the hound and the horn"
-}
-
-local actions = {
-    "lay in", "ate", "killed", "worried", "tossed",
-    "milked", "kissed", "married", "woke", "kept", "belonged to"
+    {noun = "house that Jack built"},
+    {noun = "malt", verb = "lay in"},
+    {noun = "rat", verb = "ate"},
+    {noun = "cat", verb = "killed"},
+    {noun = "dog", verb = "worried"},
+    {noun = "cow with the crumpled horn", verb = "tossed"},
+    {noun = "maiden all forlorn", verb = "milked"},
+    {noun = "man all tattered and torn", verb = "kissed"},
+    {noun = "priest all shaven and shorn", verb = "married"},
+    {noun = "rooster that crowed in the morn", verb = "woke"},
+    {noun = "farmer sowing his corn", verb = "kept"},
+    {noun = "horse and the hound and the horn", verb = "belonged to"}
 }
 
 local house = {}
@@ -29,10 +27,13 @@ house.verse = function (number, first)
         return house.verse(12, true)
     end
 
+    local noun = objects[number].noun
+
     if first then
-        return "This is the " .. objects[number] .. next
+        return "This is the " .. noun .. next
     else
-        return "\nthat " .. actions[number] .. " the " .. objects[number] .. next
+        local verb = objects[number + 1].verb
+        return "\nthat " .. verb .. " the " .. noun .. next
     end
 end
 
