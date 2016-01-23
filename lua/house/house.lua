@@ -1,6 +1,6 @@
 local objects = {
     "house that Jack built",
-    "malt", "rat", "cat",
+    "malt", "rat", "cat", "dog",
     "cow with the crumpled horn",
     "maiden all forlorn",
     "man all tattered and torn",
@@ -12,19 +12,21 @@ local objects = {
 
 local actions = {
     "lay in", "ate", "killed", "worried", "tossed",
-    "milked", "kissed", "married", "woke", "kept", "belonged"
+    "milked", "kissed", "married", "woke", "kept", "belonged to"
 }
 
 local house = {}
 
 house.verse = function (number, first)
     if first ~= false then first = true end
+
+    local next
     if number == 1 then
-        next = "\n"
-    elseif number <= 11 then
+        next = '.'
+    elseif number <= 12 then
         next = house.verse(number - 1, false)
     else
-        return house.verse(11, true)
+        return house.verse(12, true)
     end
 
     if first then
@@ -36,7 +38,7 @@ end
 
 house.recite = function ()
     rhyme = {}
-    for i=1, 11 do
+    for i=1, 12 do
         table.insert(rhyme, house.verse(i))
     end
     return table.concat(rhyme, '\n')
