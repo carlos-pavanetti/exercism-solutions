@@ -6,32 +6,33 @@ class Garden(object):
         rows = garden.splitlines()
         if students != Garden.default_students:
             students.sort()
+        self.students = students
 
         self.cups = {}
+        cups = self.proccess_rows(rows)
+
+        for kid in students:
+            self.cups[kid] = [Garden.inittialToPlant(i) for i in cups[kid]]
+
+    def plants(self, kid):
+        if kid in self.students:
+            return self.cups[kid]
+
+    initMap = {'V': 'Violets', 'R': 'Radishes', 'G': 'Grass', 'C': 'Clover'}
+
+    def inittialToPlant(char):
+        if char in Garden.initMap:
+            return Garden.initMap[char]
+
+    def proccess_rows(self, rows):
+        cups = {kid: [] for kid in self.students}
 
         for row in rows:
             plants = iter(row)
-            for student in students:
+            for kid in self.students:
                 try:
-                    if student not in self.cups:
-                        self.cups[student] = []
-                    self.cups[student].append(next(plants))
-                    self.cups[student].append(next(plants))
+                    cups[kid].append(next(plants))
+                    cups[kid].append(next(plants))
                 except:
-                    pass
-        for student in students:
-            cups = map(Garden.charToPlant, self.cups[student])
-            self.cups[student] = list(cups)
-
-    def plants(self, kid):
-        return self.cups[kid]
-
-    def charToPlant(char):
-        if char == 'V':
-            return 'Violets'
-        if char == 'R':
-            return 'Radishes'
-        if char == 'G':
-            return 'Grass'
-        if char == 'C':
-            return 'Clover'
+                    break
+        return cups
