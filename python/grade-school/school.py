@@ -1,4 +1,5 @@
 from collections import defaultdict
+from copy import deepcopy
 
 
 class School(object):
@@ -7,16 +8,15 @@ class School(object):
         self.name = ""
 
     def add(self, student, grade):
-        self.db[grade].update({student})
+        self.db[grade].add(student)
 
     def grade(self, grade):
-        return self.db[grade]
+        return deepcopy(self.db[grade])
 
     def sort(self):
         school = []
         for grade, students in self.db.items():
-            students = list(students)
-            students.sort()
+            students = sorted(students)
             school.append((grade, tuple(students)))
 
         return school
