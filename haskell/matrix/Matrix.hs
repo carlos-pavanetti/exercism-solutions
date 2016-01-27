@@ -1,13 +1,17 @@
-{-# LANGUAGE FlexibleInstances #-}
-module Matrix where
+module Matrix (
+    Matrix,
+    row, column, rows, cols,
+    shape, transpose,
+    reshape, flatten,
+    fromString, fromList
+) where
 
 import qualified Data.List as L
 import qualified Data.Vector as V
 
-import Data.Char(isSpace, toUpper)
+import Data.Maybe(listToMaybe)
 import Control.Arrow((&&&))
 
--- data Matrix a = Matrix (V.Vector (V.Vector a))
 data Matrix a = Matrix [[a]] deriving (Eq, Show)
 
 row :: Int -> Matrix a -> V.Vector a
@@ -25,7 +29,7 @@ shape :: Matrix a -> (Int, Int)
 shape = rows &&& cols
 
 fromString :: Read a => String -> Matrix a
-fromString = fromList . map (map read . words) . lines
+fromString = Matrix . map (L.unfoldr $ listToMaybe . reads) . lines
 
 fromList :: [[a]] -> Matrix a
 fromList = Matrix
