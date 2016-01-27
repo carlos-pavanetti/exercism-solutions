@@ -38,7 +38,7 @@ house.verse = function (number, first)
 end
 
 house.recite = function ()
-    rhyme = {}
+    local rhyme = {}
     for i=1, 12 do
         table.insert(rhyme, house.verse(i))
     end
