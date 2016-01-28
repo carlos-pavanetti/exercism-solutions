@@ -5,9 +5,6 @@ import Data.List.Split (chunksOf)
 
 type OpticalTextLine = [String]  -- 4 string lines formes a text line
 
-convertEachDigitGroup :: OpticalTextLine -> String
-convertEachDigitGroup = concatMap (map (convertDigit . unlines)) . chunksOf 4 . transpose . map (chunksOf 3)
-
 convert :: String -> String
 convert = groupLines . convertByLine . splitTextLines
     where
@@ -15,10 +12,15 @@ convert = groupLines . convertByLine . splitTextLines
         splitTextLines = chunksOf 4 . lines
 
         convertByLine :: [OpticalTextLine] -> [String]
-        convertByLine = map convertEachDigitGroup
+        convertByLine = map convertEachLine
 
         groupLines :: [String] -> String
         groupLines = intercalate ","
+
+convertEachLine :: OpticalTextLine -> String
+convertEachLine = map (convertDigit . unlines) . groupDigits
+    where
+        groupDigits =  transpose . map (chunksOf 3)
 
 convertDigit :: String -> Char
 convertDigit input = case lexicon input of
