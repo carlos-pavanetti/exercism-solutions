@@ -1,17 +1,11 @@
+require 'fun'()
+
 local square_of_sums = function(n)
-    local sum = 0  -- Always be local :D
-    for i=1, n do
-        sum = sum + i
-    end
-    return sum^2
+    return reduce(operator.add, 0, range(n))^2
 end
 
 local sum_of_squares = function(n)
-    local sum = 0
-    for i=1, n do
-        sum = sum + i^2
-    end
-    return sum
+    return reduce(operator.add, 0, map(function(x) return x^2 end, range(n)))
 end
 
 local diffsq = function(n)
