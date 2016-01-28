@@ -3,15 +3,25 @@ module OCR (convert) where
 import Data.List (transpose, intercalate)
 import Data.List.Split (chunksOf)
 
-convertEachGroup :: String -> String
-convertEachGroup = concatMap (map (convertDigit . unlines)) . chunksOf 4 . transpose . map (chunksOf 3) . lines
+type OpticalTextLine = [String]  -- 4 string lines formes a text line
+
+convertEachDigitGroup :: OpticalTextLine -> String
+convertEachDigitGroup = concatMap (map (convertDigit . unlines)) . chunksOf 4 . transpose . map (chunksOf 3)
 
 convert :: String -> String
-convert = intercalate "," . map (convertEachGroup . unlines) . chunksOf 4 . lines
+convert = groupLines . convertByLine . splitTextLines
+    where
+        splitTextLines :: String -> [OpticalTextLine]
+        splitTextLines = chunksOf 4 . lines
 
+        convertByLine :: [OpticalTextLine] -> [String]
+        convertByLine = map convertEachDigitGroup
+
+        groupLines :: [String] -> String
+        groupLines = intercalate ","
 
 convertDigit :: String -> Char
-convertDigit input = case process input of
+convertDigit input = case lexicon input of
     152526 -> '0'
     119556 -> '1'
     34509  -> '2'
@@ -24,9 +34,9 @@ convertDigit input = case process input of
     139647 -> '9'
     otherwise -> '?'
 
-process :: String -> Int
-process = foldr valueFunc 0
+lexicon :: String -> Int
+lexicon = foldr processPattern 0
     where
-        valueFunc '_' acc = 3*acc + 1
-        valueFunc '|' acc = 3*acc + 2
-        valueFunc  _  acc = 3*acc
+        processPattern '_' acc = 3*acc + 1
+        processPattern '|' acc = 3*acc + 2
+        processPattern  _  acc = 3*acc
