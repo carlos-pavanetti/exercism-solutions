@@ -31,20 +31,19 @@ end
 
 local valid = function(str)
     local opens = {
-        [string.byte('(')] = string.byte(')'),
-        [string.byte('[')] = string.byte(']'),
-        [string.byte('{')] = string.byte('}')
+        ['('] = ')',
+        ['['] = ']',
+        ['{'] = '}'
     }
     local closes = {
-        [string.byte(')')] = true,
-        [string.byte(']')] = true,
-        [string.byte('}')] = true
+        [')'] = true,
+        [']'] = true,
+        ['}'] = true
     }
 
     local validating_stack = stack.new()
 
-    for index_char=1, #str do
-        local char = str:byte(index_char)
+    for char in str:gmatch('.') do
         if opens[char] then
             validating_stack:push(opens[char])
         elseif closes[char] then
@@ -54,10 +53,7 @@ local valid = function(str)
         end
     end
 
-    if not validating_stack:empty() then
-        return false
-    end
-    return true
+    return validating_stack:empty()
 end
 
 return {valid = valid}
