@@ -8,8 +8,10 @@ showOct :: (Integral a, Show a) => Decimal a -> Octal
 showOct = buildOctString ""
     where
         buildOctString acc 0 = acc
-        buildOctString acc x = buildOctString acc (x `div` 8)
-                               ++ show (x `mod` 8)
+        buildOctString acc x =
+            let currentDig = show (x `mod` 8)
+                stringRest = buildOctString acc (x `div` 8)
+            in stringRest ++ currentDig
 
 readOct :: (Integral a) => Octal -> Decimal a
 readOct = foldl accumOct 0
