@@ -1,12 +1,8 @@
 return {
     word_count = function(phrase)
-        count = {}
-        for word in phrase:lower():gmatch('[%a%d]+') do
-            if count[word] then
-                count[word] = count[word] + 1
-            else
-                count[word] = 1
-            end
+        local count = {}
+        for word in phrase:lower():gmatch('%w+') do
+            count[word] = (count[word] or 0) + 1
         end
         return count
     end
