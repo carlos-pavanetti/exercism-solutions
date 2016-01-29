@@ -2,15 +2,14 @@ from itertools import groupby
 
 
 def encode(source):
-    result = ""
     grouped = groupby(source)
-    for k, g in grouped:
-        groupSize = len(list(g))
-        if groupSize > 1:
-            result += str(groupSize) + k
-        else:
-            result += k
-    return result
+
+    def genRLE():
+        for key, group in grouped:
+            groupSize = len(list(group))
+            yield str(groupSize) + key if groupSize > 1 else key
+
+    return ''.join(genRLE())
 
 
 def decode(source):
