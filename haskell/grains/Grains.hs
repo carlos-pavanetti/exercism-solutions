@@ -1,7 +1,10 @@
 module Grains(square, total) where
 
-square :: (Num c) => Int -> c
-square = (!!) (iterate (*2) 1) . (+ (-1))
+square :: (Integral a) => a -> a
+square = (2^) . pred
 
-total :: Integer
-total = (\n -> (2^n) - 1) 64
+totalUntil :: Integral a => a -> a
+totalUntil = pred . (2^)
+
+total :: Integral a => a
+total = totalUntil 64
