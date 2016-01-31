@@ -41,11 +41,11 @@ beer.bottles = function(number, capitalize)
 end
 
 local insert, remove, concat = table.insert, table.remove, table.concat
-beer.sing = function(a, b)
-    b = b and b or 0
+beer.sing = function(from, to)
+    to = to and to or 0
 
     local song = {}
-    for verse = a, b, -1 do
+    for verse = from, to, -1 do
         insert(song, beer.verse(verse))
         insert(song, '\n')
     end
