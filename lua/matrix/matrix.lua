@@ -1,7 +1,7 @@
 local tinsert, tonumber = table.insert, tonumber
 
 local matrix_new = function (matrix_string)
-    local self = {}
+    local matrix = {}
 
     for line in matrix_string:gmatch('[^\n\r]+') do
         local row = {}
@@ -10,23 +10,23 @@ local matrix_new = function (matrix_string)
             tinsert(row, tonumber(number))
         end
 
-        tinsert(self, row)
+        tinsert(matrix, row)
     end
 
-    self.row = function(row)
-        return self[row]
-    end
+    return {
+        row = function(row)
+            return matrix[row]
+        end,
 
-    self.column = function(column)
-        local col = {}
-        for _, row in ipairs(self) do
-            tinsert(col, row[column])
+        column = function(column)
+            local col = {}
+            for _, row in ipairs(matrix) do
+                tinsert(col, row[column])
+            end
+
+            return col
         end
-
-        return col
-    end
-
-    return self
+    }
 end
 
 return matrix_new
