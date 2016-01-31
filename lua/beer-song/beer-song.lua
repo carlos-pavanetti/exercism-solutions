@@ -40,4 +40,18 @@ beer.bottles = function(number, capitalize)
     return bottles
 end
 
+local insert, remove, concat = table.insert, table.remove, table.concat
+beer.sing = function(a, b)
+    b = b and b or 0
+
+    local song = {}
+    for verse = a, b, -1 do
+        insert(song, beer.verse(verse))
+        insert(song, '\n')
+    end
+    remove(song)
+
+    return concat(song)
+end
+
 return beer
