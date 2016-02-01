@@ -1,21 +1,21 @@
 def prime_factors(number):
     factors = []
 
-    while number % 2 == 0:
-        factors.append(2)
-        number = number / 2
-    while number % 3 == 0:
-        factors.append(3)
-        number = number / 3
+    def append_factor(fact):
+        nonlocal number
+        while number % fact == 0:
+            factors.append(fact)
+            number /= fact
 
-    prime = 5
+    append_factor(2)
+    append_factor(3)
+
+    possible_prime = 5
     add2 = True
     while number > 1:
-        while number % prime == 0:
-            factors.append(prime)
-            number = number / prime
+        append_factor(possible_prime)
 
-        prime += 2 if add2 else 4
+        possible_prime += 2 if add2 else 4
         add2 = not add2
 
     return factors
