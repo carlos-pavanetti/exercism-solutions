@@ -9,15 +9,13 @@ def prime_factors(number):
         number = number / 3
 
     prime = 5
+    add2 = True
     while number > 1:
         while number % prime == 0:
             factors.append(prime)
             number = number / prime
-        prime += 2
 
-        while number % prime == 0:
-            factors.append(prime)
-            number = number / prime
-        prime += 4
+        prime += 2 if add2 else 4
+        add2 = not add2
 
     return factors
