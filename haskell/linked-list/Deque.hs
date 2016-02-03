@@ -2,9 +2,16 @@ module Deque where
 
 import Data.IORef
 import Data.Maybe
-import Control.Monad
+import Data.Text.Unsafe (inlinePerformIO)
+-- import Control.Monad (void)
 
 type Deque a = IORef (FingerTree a)
+
+instance Show a => Show (IORef a) where
+    show ioref = show (inlinePerformIO (readIORef ioref))
+
+mkDeque :: IO (Deque a)
+mkDeque = newIORef Empty
 
 push :: Deque a -> a -> IO ()
 push deque value = do
@@ -22,9 +29,23 @@ shift :: Deque a -> IO (Maybe a)
 shift deque = do
     fg <- readIORef deque
     let fstPair = getFirst fg
-    if isJust fstPair
+    if isNothing fstPair
         then return Nothing
-        else return (Just (fst (fromJust fstPair)))
+        else do
+            let (first, nfg) = fromJust fstPair
+            writeIORef deque nfg
+            return (Just first)
+
+pop :: Deque a -> IO (Maybe a)
+pop deque = do
+    fg <- readIORef deque
+    let fstPair = getLast fg
+    if isNothing fstPair
+        then return Nothing
+        else do
+            let (nfg, _last) = fromJust fstPair
+            writeIORef deque nfg
+            return (Just _last)
 --------------------------------------------------------------------------------
 data Digit a =
     One a
@@ -111,6 +132,27 @@ getFirst (Deep (One a) tree right) =
                 Two b c -> Deep (One b) Empty (One c)
                 Three b c d -> Deep (One b) Empty (Two c d)
                 One b -> Single b
+
+getLast :: FingerTree a -> Maybe (FingerTree a, a)
+getLast Empty = Nothing
+getLast (Single a) = Just (Empty, a)
+getLast (Deep a tree (Two b c)) =
+    Just (Deep a tree (One b), c)
+getLast (Deep a tree (Three b c d)) =
+    Just (Deep a tree (Two b c), d)
+getLast (Deep left tree (One b)) =
+    Just (reduced, b)
+    where
+        reduced =
+            case getLast tree of
+                Just (tree', Node2 c d) -> Deep left tree' (Two c d)
+                Nothing -> reducedLeft
+        reducedLeft =
+            case left of
+                One x -> Single x
+                Two x y -> Deep (One x) Empty (One y)
+                Three x y z -> Deep (Two x y) Empty (One z)
+
 
 height :: Integral i => FingerTree a -> i
 height Empty = 0
