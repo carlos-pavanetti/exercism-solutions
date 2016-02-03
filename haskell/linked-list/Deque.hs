@@ -1,14 +1,18 @@
+{-# LANGUAGE CPP #-}
 module Deque where
 
 import Data.IORef
 import Data.Maybe
-import Data.Text.Unsafe (inlinePerformIO)
--- import Control.Monad (void)
 
-type Deque a = IORef (FingerTree a)
+#ifdef DEBUG
+import Data.Text.Unsafe (inlinePerformIO)
 
 instance Show a => Show (IORef a) where
     show ioref = show (inlinePerformIO (readIORef ioref))
+#endif
+
+type Deque a = IORef (FingerTree a)
+
 
 mkDeque :: IO (Deque a)
 mkDeque = newIORef Empty
@@ -116,10 +120,10 @@ infixl 5 |>
 getFirst :: FingerTree a -> Maybe (a, FingerTree a)
 getFirst Empty = Nothing
 getFirst (Single a) = Just (a, Empty)
-getFirst (Deep (Two a b) tree c) =
-    Just (a, Deep (One b) tree c)
-getFirst (Deep (Three a b c) tree d) =
-    Just (a, Deep (Two b c) tree d)
+getFirst (Deep (Two a b) tree right) =
+    Just (a, Deep (One b) tree right)
+getFirst (Deep (Three a b c) tree right) =
+    Just (a, Deep (Two b c) tree right)
 getFirst (Deep (One a) tree right) =
     Just (a, reduced)
     where
@@ -129,23 +133,23 @@ getFirst (Deep (One a) tree right) =
                 Nothing -> reducedRight
         reducedRight =
             case right of
-                Two b c -> Deep (One b) Empty (One c)
-                Three b c d -> Deep (One b) Empty (Two c d)
-                One b -> Single b
+                One x -> Single x
+                Two x y -> Deep (One x) Empty (One y)
+                Three x y z -> Deep (One x) Empty (Two y z)
 
 getLast :: FingerTree a -> Maybe (FingerTree a, a)
 getLast Empty = Nothing
 getLast (Single a) = Just (Empty, a)
-getLast (Deep a tree (Two b c)) =
-    Just (Deep a tree (One b), c)
-getLast (Deep a tree (Three b c d)) =
-    Just (Deep a tree (Two b c), d)
-getLast (Deep left tree (One b)) =
-    Just (reduced, b)
+getLast (Deep left tree (Two a b)) =
+    Just (Deep left tree (One a), b)
+getLast (Deep left tree (Three a b c)) =
+    Just (Deep left tree (Two a b), c)
+getLast (Deep left tree (One a)) =
+    Just (reduced, a)
     where
         reduced =
             case getLast tree of
-                Just (tree', Node2 c d) -> Deep left tree' (Two c d)
+                Just (tree', Node2 b c) -> Deep left tree' (Two b c)
                 Nothing -> reducedLeft
         reducedLeft =
             case left of
