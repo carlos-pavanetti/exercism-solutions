@@ -1,21 +1,26 @@
-local byte, char = string.byte, string.char
+local byte = string.byte
+local A_ASCII_VALUE, Z_ASCII_VALUE = byte('a'), byte('z')
 
 local is_pangram = function(phrase)
     local alphabet = {}
-    for c = 97, 122 do  -- [a-z]
-        alphabet[char(c)] = false
+    -- initialize char occurrences table
+    for c = A_ASCII_VALUE, Z_ASCII_VALUE do
+        alphabet[c] = false
     end
 
+    -- registry char occurrences
     for c in phrase:lower():gmatch('.') do
-        alphabet[c] = true
+        alphabet[byte(c)] = true
     end
 
+    -- count chars occurrences that matters: [A-Z]
     local count = 0
-    for c = 97, 122 do
-        if alphabet[char(c)] then
+    for c = A_ASCII_VALUE, Z_ASCII_VALUE do
+        if alphabet[c] then
             count = count + 1
         end
     end
+
     return count >= 26
 end
 
