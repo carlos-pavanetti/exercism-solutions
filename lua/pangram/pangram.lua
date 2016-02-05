@@ -3,10 +3,6 @@ local A_ASCII_VALUE, Z_ASCII_VALUE = byte('a'), byte('z')
 
 local is_pangram = function(phrase)
     local alphabet = {}
-    -- initialize char occurrences table
-    for c = A_ASCII_VALUE, Z_ASCII_VALUE do
-        alphabet[c] = false
-    end
 
     -- registry char occurrences
     for c in phrase:lower():gmatch('.') do
