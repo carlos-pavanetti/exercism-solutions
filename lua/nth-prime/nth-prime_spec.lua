@@ -26,9 +26,8 @@ describe('nth-prime', function()
 
   it('should be efficient for large n', function()
     local execution_time = benchmark(function()
-      nth(62951)
+      nth(10001)
     end)
-    print(execution_time)
 
     assert(execution_time < 1, 'should take less than a second to execute')
   end)
