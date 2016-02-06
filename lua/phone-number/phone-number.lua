@@ -1,18 +1,22 @@
 local phone_number    = {}
 local phone_number_mt = { __index = phone_number }
 
-phone_number.new = function(_, phone_string)
-    local self = {}
-    local cleaned = phone_string:gsub('%D', '')
+local clear_phone_number = function(unsafe_number)
+    local safe_number = unsafe_number:gsub('%D', '')
 
-    if #cleaned == 11 and cleaned:sub(1,1) == '1' then
-        self.number = cleaned:sub(2)
-    elseif #cleaned == 10 then
-        self.number = cleaned
-    else
-        self.number = '0000000000'
+    if #safe_number == 10 then
+        return safe_number
     end
 
+    if #safe_number == 11 and safe_number:sub(1,1) == '1' then
+        return safe_number:sub(2)
+    end
+
+    return '0000000000'
+end
+
+phone_number.new = function(_, phone_string)
+    local self = { number = clear_phone_number(phone_string) }
     return setmetatable(self, phone_number_mt)
 end
 
