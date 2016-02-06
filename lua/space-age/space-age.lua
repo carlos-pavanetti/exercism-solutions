@@ -17,12 +17,13 @@ local year_duration_at = {
     neptune = 31557600 * 164.79132,
 }
 
-local truncate2 = function(number)
-    return tonumber(string.format('%.2f', number))
+local function round(number, decimals)
+  local factor = 10^(decimals or 0)
+  return math.floor(number * factor + 0.5) / factor
 end
 
 space_age.age_on = function(self, planet)
-    return truncate2(self.seconds / year_duration_at[planet])
+    return round(self.seconds / year_duration_at[planet], 2)
 end
 
 space_age_mt.__index = function(object, key)
