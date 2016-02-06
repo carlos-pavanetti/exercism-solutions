@@ -20,7 +20,7 @@ nth = function(n)
         return true
     end
 
-    local iter = n - 2
+    local iter = n - 6
     local param = 3
     while iter > 0 do
         if is_prime(6 * param - 1) then
