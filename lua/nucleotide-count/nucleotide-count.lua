@@ -16,7 +16,7 @@ dna.new = function(_, strand)
 end
 
 dna.count = function(self, nucleotide)
-    if self.strand ~= '' and not self.strand:find(nucleotide) then
+    if not ('ACGT'):find(nucleotide) then
         error "Invalid Nucleotide"
     end
 
