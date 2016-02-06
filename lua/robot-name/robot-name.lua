@@ -11,7 +11,7 @@ local generate_random_letter = function()
 end
 
 local ACTIVE_NAMES = {}
-generate_robot_name = function()
+local generate_robot_name = function()
     local NUM_LETTERS = 2
     local NUM_DIGITS  = 3
 
@@ -30,3 +30,20 @@ generate_robot_name = function()
     ACTIVE_NAMES[new_name] = true
     return new_name
 end
+--------------------------------------------------------------------------------
+local robot    = {}
+local robot_mt = { __index = robot }
+
+robot.new = function()
+    local self = { name = generate_robot_name () }
+    return setmetatable(self, robot_mt)
+end
+
+robot.reset = function(self)
+    local old_name = self.name
+    self.name = generate_robot_name()
+
+    ACTIVE_NAMES[old_name] = false
+end
+
+return robot
