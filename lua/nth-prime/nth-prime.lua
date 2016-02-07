@@ -1,4 +1,4 @@
-nth = function(n)
+return function(n)
     assert(n > 0, 'Should be passed a positive (>0) parameter')
 
     local prime_list = {2, 3, 5, 7, 11, 13}
@@ -20,22 +20,27 @@ nth = function(n)
         return true
     end
 
-    local iter = n - 6
-    local param = 3
-    while iter > 0 do
-        if is_prime(6 * param - 1) then
-            iter = iter - 1
+    local generate_prime_candidate = (function()
+        local gen = coroutine.create(function()
+            local k = 3
+            while true do
+                coroutine.yield(6*k-1)
+                coroutine.yield(6*k+1)
+                k = k + 1
+            end
+        end)
+        return function ()
+            local code, result = coroutine.resume(gen)
+            return result
         end
+    end) ()
 
-        if iter == 0 then break end
-
-        if is_prime(6 * param + 1) then
-            iter = iter - 1
+    local primes_remaining = n - 6
+    while primes_remaining > 0 do
+        if is_prime(generate_prime_candidate()) then
+            primes_remaining = primes_remaining - 1
         end
-        param = param + 1
     end
 
     return prime_list[n]
 end
-
-return nth
