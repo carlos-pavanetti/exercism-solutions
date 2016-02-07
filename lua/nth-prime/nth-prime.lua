@@ -20,20 +20,14 @@ return function(n)
         return true
     end
 
-    local generate_prime_candidate = (function()
-        local gen = coroutine.create(function()
-            local k = 3
-            while true do
-                coroutine.yield(6*k-1)
-                coroutine.yield(6*k+1)
-                k = k + 1
-            end
-        end)
-        return function ()
-            local code, result = coroutine.resume(gen)
-            return result
+    local generate_prime_candidate = coroutine.wrap(function()
+        local k = 3
+        while true do
+            coroutine.yield(6*k-1)
+            coroutine.yield(6*k+1)
+            k = k + 1
         end
-    end) ()
+    end)
 
     local primes_remaining = n - 6
     while primes_remaining > 0 do
