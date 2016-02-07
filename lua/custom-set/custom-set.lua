@@ -29,7 +29,7 @@ set.difference = function(self, other)
 
     for key in self:items() do
         if not other.__items[key] then
-            item[key] = true
+            items[key] = true
         end
     end
 
@@ -62,21 +62,41 @@ set.intersection = function(self, other)
     return setmetatable({ __items = items }, set_mt)
 end
 
-set.empty = function(self)
+set.is_empty = function(self)
     return next(self.__items) == nil
 end
 
 set.equals = function(self, other)
-    return self:symmetric_difference(other):empty()
+    return self:symmetric_difference(other):is_empty()
 end
 set_mt.__eq = set.equals
+
+set.is_disjoint = function(self, other)
+    return self:intersection(other):is_empty()
+end
+
+set.is_subset = function(self, other)
+    return self:intersection(other) == self
+end
 
 set.items = function(self)
     return pairs(self.__items)
 end
 
+set.size = function(self)
+    return 0
+end
+
 set.add = function(self, key)
     self.__items[key] = true
+end
+
+set.remove = function(self, key)
+    self.__items[key] = nil
+end
+
+set.contains = function(self, key)
+    return self.__items[key] == true -- to force nil to false!
 end
 
 return set.new
