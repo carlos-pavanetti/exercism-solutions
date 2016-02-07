@@ -22,14 +22,15 @@ local function round(number, decimals)
   return math.floor(number * factor + 0.5) / factor
 end
 
-space_age.age_on = function(self, planet)
+local age_on = function(self, planet)
     return round(self.seconds / year_duration_at[planet], 2)
 end
 
 space_age_mt.__index = function(object, key)
     local found, _, planet = key:find('^on_(%w+)')
-    if found and planet then
-        return function() return object:age_on(planet) end
+    if found and year_duration_at[planet] then
+        -- I would create a table to validate 'planet', but this one works.
+        return function() return age_on(object, planet) end
     end
 
     return space_age[key]

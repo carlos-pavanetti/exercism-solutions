@@ -11,7 +11,7 @@ square = function(sq)
     return 1 << (sq - 1)
 end
 
-total_until = function(sq)
+local total_until = function(sq)
     return (1 << sq) - 1
 end
 
