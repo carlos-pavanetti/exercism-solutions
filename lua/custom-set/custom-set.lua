@@ -74,16 +74,44 @@ set.is_empty = function(self)
 end
 
 set.equals = function(self, other)
-    return self:symmetric_difference(other):is_empty()
+    for key in self:items() do
+        if not other:contains(key) then
+            return false
+        end
+    end
+
+    for key in other:items() do
+        if not self:contains(key) then
+            return false
+        end
+    end
+    return true
 end
 set_mt.__eq = set.equals
 
 set.is_disjoint = function(self, other)
-    return self:intersection(other):is_empty()
+    for key in self:items() do
+        if other:contains(key) then
+            return false
+        end
+    end
+
+    for key in other:items() do
+        if self:contains(key) then
+            return false
+        end
+    end
+    return true
 end
 
 set.is_subset = function(self, other)
-    return self:intersection(other) == self
+    for key in self:items() do
+        if not other:contains(key) then
+            return false
+        end
+    end
+
+    return true
 end
 
 set.items = function(self)
