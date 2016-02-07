@@ -2,10 +2,13 @@ local set    = {}
 local set_mt = { __index = set }
 
 set.new = function(...)
-    local arg = {...}
-    local self = { __items = {} }
-    for _, value in ipairs(arg) do
-        self.__items[value] = true
+    local self = { __items = {}, __size = 0 }
+
+    for _, value in ipairs({...}) do
+        if not self.__items[value] then
+            self.__items[value] = true
+            self.__size = self.__size + 1
+        end
     end
 
     return setmetatable(self, set_mt)
@@ -88,20 +91,21 @@ set.items = function(self)
 end
 
 set.size = function(self)
-    local size = 0
-    for key in self:items() do
-        -- size = size + (key and 1 or 0)
-        size = size + 1
-    end
-    return size
+    return self.__size
 end
 
 set.add = function(self, key)
-    self.__items[key] = true
+    if not self:contains(key) then
+        self.__items[key] = true
+        self.__size = self.__size + 1
+    end
 end
 
 set.remove = function(self, key)
-    self.__items[key] = nil
+    if self:contains(key) then
+        self.__items[key] = nil
+        self.__size = self.__size + 1
+    end
 end
 
 set.contains = function(self, key)
