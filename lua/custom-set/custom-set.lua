@@ -84,7 +84,12 @@ set.items = function(self)
 end
 
 set.size = function(self)
-    return 0
+    local size = 0
+    for key in self:items() do
+        -- size = size + (key and 1 or 0)
+        size = size + 1
+    end
+    return size
 end
 
 set.add = function(self, key)
