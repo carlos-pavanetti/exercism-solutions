@@ -13,7 +13,8 @@ local default_students = {
     "larry"
 }
 
-local MAPS_INITTIAL_TO_PLANT = { V = 'violets', R = 'radishes', G = 'grass', C = 'clover' }
+local MAPS_INITTIAL_TO_PLANT =
+    { V = 'violets', R = 'radishes', G = 'grass', C = 'clover' }
 local toplant = function(inittial)
     return MAPS_INITTIAL_TO_PLANT[inittial:upper()]
 end
