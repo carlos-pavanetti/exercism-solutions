@@ -12,54 +12,58 @@ set.new = function(...)
 end
 
 set.union = function(self, other)
-    local items = {}
+    local union = set.new()
 
     for key in self:items() do
-        items[key] = true
+        union:add(key)
     end
     for key in other:items() do
-        items[key] = true
+        union:add(key)
     end
 
-    return setmetatable({ __items = items }, set_mt)
+    return union
 end
 
 set.difference = function(self, other)
-    local items = {}
+    local diff = set.new()
 
     for key in self:items() do
-        if not other.__items[key] then
-            items[key] = true
+        if not other:contains(key) then
+            diff:add(key)
         end
     end
 
-    return setmetatable({ __items = items }, set_mt)
+    return diff
 end
 
 set.symmetric_difference = function(self, other)
-    local items = {}
+    local sym_diff = set.new()
 
     for key in self:items() do
-        items[key] = true
-    end
-
-    for key in other:items() do
-        items[key] = (not self.__items[key]) and true or nil
-    end
-
-    return setmetatable({ __items = items }, set_mt)
-end
-
-set.intersection = function(self, other)
-    local items = {}
-
-    for key in self:items() do
-        if other.__items[key] then
-            items[key] = true
+        if not other:contains(key) then
+            sym_diff:add(key)
         end
     end
 
-    return setmetatable({ __items = items }, set_mt)
+    for key in other:items() do
+        if not self:contains(key) then
+            sym_diff:add(key)
+        end
+    end
+
+    return sym_diff
+end
+
+set.intersection = function(self, other)
+    local intersection = set.new()
+
+    for key in self:items() do
+        if other:contains(key) then
+            intersection:add(key)
+        end
+    end
+
+    return intersection
 end
 
 set.is_empty = function(self)
