@@ -2,12 +2,12 @@ local set    = {}
 local set_mt = { __index = set }
 
 set.new = function(...)
-    local self = { __items = {}, __size = 0 }
+    local self = { _items = {}, _size = 0 }
 
     for _, value in ipairs({...}) do
-        if not self.__items[value] then
-            self.__items[value] = true
-            self.__size = self.__size + 1
+        if not self._items[value] then
+            self._items[value] = true
+            self._size = self._size + 1
         end
     end
 
@@ -70,22 +70,11 @@ set.intersection = function(self, other)
 end
 
 set.is_empty = function(self)
-    return next(self.__items) == nil
+    return self._size == 0
 end
 
 set.equals = function(self, other)
-    for key in self:items() do
-        if not other:contains(key) then
-            return false
-        end
-    end
-
-    for key in other:items() do
-        if not self:contains(key) then
-            return false
-        end
-    end
-    return true
+    return self:is_subset(other) and other:is_subset(self)
 end
 set_mt.__eq = set.equals
 
@@ -115,29 +104,29 @@ set.is_subset = function(self, other)
 end
 
 set.items = function(self)
-    return pairs(self.__items)
+    return pairs(self._items)
 end
 
 set.size = function(self)
-    return self.__size
+    return self._size
 end
 
 set.add = function(self, key)
     if not self:contains(key) then
-        self.__items[key] = true
-        self.__size = self.__size + 1
+        self._items[key] = true
+        self._size = self._size + 1
     end
 end
 
 set.remove = function(self, key)
     if self:contains(key) then
-        self.__items[key] = nil
-        self.__size = self.__size + 1
+        self._items[key] = nil
+        self._size = self._size + 1
     end
 end
 
 set.contains = function(self, key)
-    return self.__items[key] == true -- to force nil to false!
+    return self._items[key] == true -- to force nil to false!
 end
 
 return set.new
