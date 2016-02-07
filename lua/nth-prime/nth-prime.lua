@@ -1,3 +1,4 @@
+local insert = table.insert
 return function(n)
     assert(n > 0, 'Should be passed a positive (>0) parameter')
 
@@ -15,8 +16,6 @@ return function(n)
                 return false
             end
         end
-
-        table.insert(prime_list, candidate)
         return true
     end
 
@@ -31,7 +30,9 @@ return function(n)
 
     local primes_remaining = n - 6
     while primes_remaining > 0 do
-        if is_prime(generate_prime_candidate()) then
+        local candidate = generate_prime_candidate()
+        if is_prime(candidate) then
+            insert(prime_list, candidate)
             primes_remaining = primes_remaining - 1
         end
     end
