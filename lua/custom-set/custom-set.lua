@@ -1,33 +1,42 @@
 local set    = {}
-local set_mt = {}
+local set_mt = { __index = set }
 
-set_mt.__index = set
-set_mt.__eq = set.equals
+set.new = function(...)
+    local arg = {...}
+    local self = { __items = {} }
+    for _, value in ipairs(arg) do
+        self.__items[value] = true
+    end
+
+    return setmetatable(self, set_mt)
+end
 
 set.union = function(self, other)
     local items = {}
 
-    for keys in self:items() do
+    for key in self:items() do
         items[key] = true
     end
     for key in other:items() do
         items[key] = true
     end
 
-    return set.new(unpack(items))
+    return setmetatable({ __items = items }, set_mt)
 end
 
 set.difference = function(self, other)
     local items = {}
 
-    for keys in self:items() do
-        items[key] = (not other.__items[key]) and true or false
+    for key in self:items() do
+        if not other.__items[key] then
+            item[key] = true
+        end
     end
 
-    return set.new(unpack(items))
+    return setmetatable({ __items = items }, set_mt)
 end
 
-set.symetric_difference = function(self, other)
+set.symmetric_difference = function(self, other)
     local items = {}
 
     for key in self:items() do
@@ -38,19 +47,19 @@ set.symetric_difference = function(self, other)
         items[key] = (not self.__items[key]) and true or nil
     end
 
-    return set.new(unpack(items))
+    return setmetatable({ __items = items }, set_mt)
 end
 
 set.intersection = function(self, other)
     local items = {}
 
     for key in self:items() do
-        if other[key] then
+        if other.__items[key] then
             items[key] = true
         end
     end
 
-    return set.new(unpack(items))
+    return setmetatable({ __items = items }, set_mt)
 end
 
 set.empty = function(self)
@@ -58,22 +67,16 @@ set.empty = function(self)
 end
 
 set.equals = function(self, other)
-    return self:symetric_difference(other):empty()
+    return self:symmetric_difference(other):empty()
 end
+set_mt.__eq = set.equals
 
 set.items = function(self)
     return pairs(self.__items)
 end
 
-
-set.new = function(...)
-    local arg = {...}
-    local self = { __items = {} }
-    for _, value in ipairs(arg) do
-        self.__items[value] = true
-    end
-
-    return setmetatable(self, set_mt)
+set.add = function(self, key)
+    self.__items[key] = true
 end
 
 return set.new
