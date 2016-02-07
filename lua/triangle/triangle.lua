@@ -1,14 +1,15 @@
 return {
     kind = function(a, b, c)
-        assert((a + b + c) > 2 * math.max(a, b, c), 'Input Error')
+        local sides = {a, b, c}
+        table.sort(sides)
+        a, b, c = table.unpack(sides)
 
-        if a == b then
-            if b == c then
-                return 'equilateral'
-            else
-                return 'isosceles'
-            end
-        elseif a == c or b == c then
+        assert(a + b > c, 'Input Error')
+
+        -- a <= b <= c
+        if a == c then
+            return 'equilateral'
+        elseif a == b or b == c then
             return 'isosceles'
         else
             return 'scalene'
