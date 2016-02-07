@@ -36,8 +36,8 @@ luhn.addends = function(self)
 
     for digit in self.number:gmatch('.') do
         local number = tonumber(digit) * (double and 2 or 1)
-        if number > 10 then
-            number = (number % 10) + 1
+        if number >= 10 then
+            number = number - 9
         end
 
         table.insert(addends, number)
