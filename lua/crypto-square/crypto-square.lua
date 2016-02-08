@@ -24,7 +24,7 @@ local segments = function(source_text)
     return segments, square_size
 end
 
-local ciphertext = function(source_text)
+local normalized_ciphertext = function(source_text)
     local splited_text, square_size = segments(source_text)
 
     local cipher = {}
@@ -39,12 +39,11 @@ local ciphertext = function(source_text)
     end
 
     for i=1, square_size do cipher[i] = table.concat(cipher[i]) end
-    return table.concat(cipher), cipher
+    return table.concat(cipher, ' ')
 end
 
-local normalized_ciphertext = function(source_text)
-    local _, segmented_cipher = ciphertext(source_text)
-    return table.concat(segmented_cipher, ' ')
+local ciphertext = function(source_text)
+    return normalized_ciphertext(source_text):gsub(' ', '')
 end
 
 return {
