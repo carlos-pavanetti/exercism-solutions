@@ -1,5 +1,3 @@
-local null_function = function() error 'Not yet implemented' end
-
 local map = function(list, operation)
     local mapped_list = {}
     for k, v in ipairs(list) do
@@ -8,15 +6,27 @@ local map = function(list, operation)
     return mapped_list
 end
 
-local reduce = function(list, acc, operation)
+local reduce = function(list, acc_const, operation)
+    local acc = acc_const
     for _, v in ipairs(list) do
         acc = operation(v, acc)
     end
     return acc
 end
 
+local filter = function(list, predicate)
+    local filtered_list = {}
+    for _, v in ipairs(list) do
+        if predicate(v) then
+            table.insert(filtered_list, v)
+        end
+    end
+
+    return filtered_list
+end
+
 return {
     map = map,
     reduce = reduce,
-    filter = null_function
+    filter = filter
 }
