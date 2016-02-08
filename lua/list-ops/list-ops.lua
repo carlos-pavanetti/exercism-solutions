@@ -25,8 +25,15 @@ local filter = function(list, predicate)
     return filtered_list
 end
 
+local string_to_list = function(str)
+    local list = {}
+    str:gsub(".", function(char) table.insert(list, char) end)
+    return list
+end
+
 return {
     map = map,
     reduce = reduce,
-    filter = filter
+    filter = filter,
+    string_to_list = string_to_list
 }
