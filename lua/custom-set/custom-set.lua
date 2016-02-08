@@ -85,11 +85,6 @@ set.is_disjoint = function(self, other)
         end
     end
 
-    for key in other:items() do
-        if self:contains(key) then
-            return false
-        end
-    end
     return true
 end
 
