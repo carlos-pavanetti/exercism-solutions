@@ -8,8 +8,15 @@ local map = function(list, operation)
     return mapped_list
 end
 
+local reduce = function(list, acc, operation)
+    for _, v in ipairs(list) do
+        acc = operation(v, acc)
+    end
+    return acc
+end
+
 return {
     map = map,
-    reduce = null_function,
+    reduce = reduce,
     filter = null_function
 }
