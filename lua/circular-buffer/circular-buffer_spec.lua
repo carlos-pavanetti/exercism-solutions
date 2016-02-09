@@ -55,7 +55,7 @@ describe('circular-buffer', function()
 
   it('writes of nil do not occupy buffer', function()
     local buffer = CircularBuffer:new(3)
-    buffer.write(nil)
+    buffer:write(nil)
     for i = 1, 3 do
       buffer:write(tostring(i))
     end
