@@ -5,7 +5,7 @@ return function(options)
     assert(#options.digits >= options.span,
            'span should be not bigger than string')
 
-    local largest_product = (-1 / 0)
+    local largest_product = -math.huge
     local step = options.span - 1
 
     for i = 1, #options.digits - step do
@@ -13,9 +13,7 @@ return function(options)
         for digit in options.digits:sub(i, i + step):gmatch('.') do
             product = product * digit
         end
-        if largest_product < product then
-            largest_product = product
-        end
+        largest_product = math.max(largest_product, product)
     end
 
     return largest_product
