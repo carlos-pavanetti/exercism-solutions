@@ -1,11 +1,3 @@
-local function sum(list)
-    local acc = 0
-    for _, value in ipairs(list) do
-        acc = acc + value
-    end
-    return acc
-end
-
 local function is_strike(frame)
     return frame and frame[1] == 10
 end

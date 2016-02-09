@@ -1,3 +1,11 @@
+local function sum(list)
+    local acc = 0
+    for _, value in ipairs(list) do
+        acc = acc + value
+    end
+    return acc
+end
+
 return function()
     local frames = {}
     local current_frame = {}
@@ -30,10 +38,7 @@ return function()
 
         table.insert(current_frame, pins)
         if #current_frame > 2 then
-            local frame_score = current_frame[1]
-                              + current_frame[2]
-                              + current_frame[3]
-            table.insert(frames, frame_score)
+            table.insert(frames, sum(current_frame))
 
             if is_strike() then
                 current_frame = { current_frame[2], current_frame[3] }
@@ -43,7 +48,7 @@ return function()
         end
 
         if is_afoot() and #current_frame == 2 and is_normal_frame() then
-            table.insert(frames, current_frame[1] + current_frame[2])
+            table.insert(frames, sum(current_frame))
             current_frame = {}
         end
     end
