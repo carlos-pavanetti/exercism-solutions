@@ -1,7 +1,6 @@
 local circular_buffer    = {}
 local circular_buffer_mt = { __index = circular_buffer }
 
-
 circular_buffer.new = function(_, capacity)
     local prototype = {
         _capacity = capacity,
@@ -13,37 +12,41 @@ circular_buffer.new = function(_, capacity)
     return setmetatable(prototype, circular_buffer_mt)
 end
 
+local is_nil = function(value) return value == nil end
+local is_not_nil = function(value) return value ~= nil end
+
+local increment_index = function(buffer, index)
+    local index_key = table.concat {'_', index, '_index'}
+    buffer[index_key] = (buffer[index_key] + 1) % buffer._capacity
+end
+
 circular_buffer.read = function(self)
-    assert(self._content[self._read_index] ~= nil, 'buffer is empty')
+    assert(is_not_nil(self._content[self._read_index]), 'buffer is empty')
 
     local result = self._content[self._read_index]
     self._content[self._read_index] = nil
 
-    self._read_index = (self._read_index + 1) % self._capacity
+    increment_index(self, 'read')
     return result
 end
 
 circular_buffer.write = function(self, value)
-    assert(self._content[self._write_index] == nil, 'buffer is full')
+    assert(is_nil(self._content[self._write_index]), 'buffer is full')
 
-    if value == nil then return end
+    if is_nil(value) then return end
 
     self._content[self._write_index] = value
-    self._write_index = (self._write_index + 1) % self._capacity
+    increment_index(self, 'write')
 end
 
 circular_buffer.forceWrite = function(self, value)
-    if value == nil then return end
-
-    -- if self._content[self._write_index] ~= nil then
-    --     self._read_index = (self._read_index - 1) % self._capacity
-    -- end
+    if is_nil(value) then return end
 
     self._content[self._write_index] = value
     if self._read_index == self._write_index then
-        self._read_index = (self._read_index + 1) % self._capacity
+        increment_index(self, 'read')
     end
-    self._write_index = (self._write_index % self._capacity) + 1
+    increment_index(self, 'write')
 end
 
 circular_buffer.clear = function(self)
