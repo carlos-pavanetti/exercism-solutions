@@ -5,11 +5,16 @@ circular_buffer.new = function(_, capacity)
     local prototype = {
         _capacity = capacity,
         _content = {},
-        _read_index = 0,
-        _write_index = 0
+        _read_index = 1,
+        _write_index = 1
     }
 
     return setmetatable(prototype, circular_buffer_mt)
+end
+
+circular_buffer.clear = function(self)
+    self._content = {}
+    self._read_index = self._write_index
 end
 
 local is_nil = function(value) return value == nil end
@@ -47,15 +52,6 @@ circular_buffer.forceWrite = function(self, value)
         increment_index(self, 'read')
     end
     increment_index(self, 'write')
-end
-
-circular_buffer.clear = function(self)
-    self._content = {
-        _capacity = self.capacity,
-        _content = {},
-        _read_index = 1,
-        _write_index = 1
-    }
 end
 
 return circular_buffer
