@@ -1,4 +1,4 @@
-local function mount_expression(source)
+local function parse_expression(source)
     local  left_hand_queue = {}
     local right_hand_queue = {}
 
@@ -13,38 +13,43 @@ local function mount_expression(source)
     end
 
     local current_hand_queue = left_hand_queue
+    local function clear_stack()
+        while not stack_is_empty() do
+            table.insert(current_hand_queue, stack_last_item())
+            table.remove(symbol_stack)
+        end
+    end
+
+    local function can_push_token_to_stack(token)
+        return stack_is_empty()
+        or precedence(stack_last_item()) < precedence(token)
+    end
+
     for token in source:upper():gmatch('%S+') do
         if token:match('^%w+$') then
             table.insert(current_hand_queue, token)
         elseif token:match('%p+') then
             if token == '==' then
-                while not stack_is_empty() do
-                    table.insert(current_hand_queue, stack_last_item())
-                    table.remove(symbol_stack)
+                if current_hand_queue == right_hand_queue then
+                    error 'Only one equality (==) is allowed per expression!'
                 end
-
+                clear_stack()
                 current_hand_queue = right_hand_queue
-            elseif stack_is_empty()
-            or precedence(stack_last_item()) < precedence(token) then
+            elseif can_push_token_to_stack(token) then
                 table.insert(symbol_stack, token)
             else -- precedence is less than or equal
                 repeat
                     table.insert(current_hand_queue, stack_last_item())
                     table.remove(symbol_stack)
-                until stack_is_empty()
-                or precedence(stack_last_item()) < precedence(token)
+                until can_push_token_to_stack(token)
 
                 table.insert(symbol_stack, token)
             end
         end
     end
 
-    while not stack_is_empty() do
-        table.insert(current_hand_queue, stack_last_item())
-        table.remove(symbol_stack)
-    end
-
+    clear_stack()
     return { left = left_hand_queue, right = right_hand_queue}
 end
 
-return mount_expression
+return parse_expression
