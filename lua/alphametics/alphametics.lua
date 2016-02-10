@@ -1,5 +1,7 @@
 local function mount_expression(source)
-    local output_queue = {}
+    local  left_hand_queue = {}
+    local right_hand_queue = {}
+
     local symbol_stack = {}
 
     local function stack_is_empty() return #symbol_stack == 0 end
@@ -10,16 +12,24 @@ local function mount_expression(source)
         return precedence_map[symbol] or error 'Invalid symbol ' .. symbol
     end
 
+    local current_hand_queue = left_hand_queue
     for token in source:upper():gmatch('%S+') do
         if token:match('^%w+$') then
-            table.insert(output_queue, token)
+            table.insert(current_hand_queue, token)
         elseif token:match('%p+') then
-            if stack_is_empty()
+            if token == '==' then
+                while not stack_is_empty() do
+                    table.insert(current_hand_queue, stack_last_item())
+                    table.remove(symbol_stack)
+                end
+
+                current_hand_queue = right_hand_queue
+            elseif stack_is_empty()
             or precedence(stack_last_item()) < precedence(token) then
                 table.insert(symbol_stack, token)
             else -- precedence is less than or equal
                 repeat
-                    table.insert(output_queue, stack_last_item())
+                    table.insert(current_hand_queue, stack_last_item())
                     table.remove(symbol_stack)
                 until stack_is_empty()
                 or precedence(stack_last_item()) < precedence(token)
@@ -30,11 +40,11 @@ local function mount_expression(source)
     end
 
     while not stack_is_empty() do
-        table.insert(output_queue, stack_last_item())
+        table.insert(current_hand_queue, stack_last_item())
         table.remove(symbol_stack)
     end
 
-    return output_queue
+    return { left = left_hand_queue, right = right_hand_queue}
 end
 
 return mount_expression
