@@ -1,4 +1,4 @@
-local prime_numbers = { 2, 3 }
+local prime_numbers = { 2, 3, 5, 7, 11, 13 }
 local function is_prime(number)
     for _, prime in ipairs(prime_numbers) do
         if prime^2 > number then
@@ -13,8 +13,9 @@ local yield, wrap = coroutine.yield, coroutine.wrap
 local generate_prime_candidate = wrap(function()
     local seed = 1
     while true do
-        yield(6 * seed - 1)
-        yield(6 * seed + 1)
+        for _, i in pairs({-13, -11, -7, -1, 1, 7, 11, 13}) do
+            yield(30 * seed + i)
+        end
         seed = seed + 1
     end
 end)
