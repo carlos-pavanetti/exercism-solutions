@@ -9,11 +9,12 @@ local function is_prime(number)
     end
 end
 
-local generate_prime_candidate = coroutine.wrap(function()
+local yield, wrap = coroutine.yield, coroutine.wrap
+local generate_prime_candidate = wrap(function()
     local seed = 1
     while true do
-        coroutine.yield(6 * seed - 1)
-        coroutine.yield(6 * seed + 1)
+        yield(6 * seed - 1)
+        yield(6 * seed + 1)
         seed = seed + 1
     end
 end)
@@ -33,6 +34,7 @@ local function is_divisible(dividend, divisor)
     return dividend % divisor == 0
 end
 
+local insert = table.insert
 local function prime_factors(number)
     local factors = {}
 
@@ -40,7 +42,7 @@ local function prime_factors(number)
     while number > 1 do
         local prime = prime_numbers[prime_index]
         while is_divisible(number, prime) do
-            table.insert(factors, prime)
+            insert(factors, prime)
             number = number // prime
         end
         prime_index = prime_index + 1
