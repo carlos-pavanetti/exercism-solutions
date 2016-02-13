@@ -17,4 +17,4 @@ install:
   - luarocks install luafilesystem
   - luarocks install busted
 
-script: "find lua/. -type d -exec sh -c '( cd {} && busted . --verbose -o TAP )' \\;"
+script: "find lua -type d -print0 | xargs -i -0 sh -c 'cd {} && busted . --verbose -o TAP'"
