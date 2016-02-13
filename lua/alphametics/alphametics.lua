@@ -1,3 +1,6 @@
+local function is_word(token) return token:match('^%a+$') end
+local function is_number(token) return token:match('^%d+$') end
+
 local function parse_expression(source)
     local  left_hand_queue = {}
     local right_hand_queue = {}
@@ -26,7 +29,7 @@ local function parse_expression(source)
     end
 
     for token in source:upper():gmatch('%S+') do
-        if token:match('^%w+$') then
+        if is_word(token) or is_number(token) then
             table.insert(current_hand_queue, token)
         elseif token:match('%p+') then
             if token == '==' then
@@ -52,4 +55,68 @@ local function parse_expression(source)
     return { left = left_hand_queue, right = right_hand_queue}
 end
 
-return parse_expression
+local function mount_letter_map(expression_queue)
+    local letter_map = {}
+
+    local function add_letters(hand)
+        for _, token in ipairs(hand) do
+            if is_word(token) then
+                for letter in token:gmatch('.') do
+                    letter_map[letter] = 9
+                end
+            end
+        end
+    end
+
+    add_letters(expression_queue.left)
+    add_letters(expression_queue.right)
+    return letter_map
+end
+
+local function evaluate(expression_queue, letter_map)
+    local function word_value(word)
+        local value = 0
+        for char in word:gmatch('.') do
+            value = value * 10 + letter_map[char]
+        end
+        return value
+    end
+
+    local eval_queue = { left = {}, right = {} }
+    local function get_operands(hand)
+        local op2 = tonumber(eval_queue[hand][#eval_queue[hand]])
+        table.remove(eval_queue[hand])
+        local op1 = tonumber(eval_queue[hand][#eval_queue[hand]])
+        table.remove(eval_queue[hand])
+        return op1, op2
+    end
+
+    local function eval_hand(hand)
+        for _, token in ipairs(expression_queue[hand]) do
+            if is_word(token) then
+                table.insert(eval_queue[hand], word_value(token))
+            elseif token == '+' then
+                local op1, op2 = get_operands(hand)
+                table.insert(eval_queue[hand], op1 + op2)
+            elseif token == '-' then
+                local op1, op2 = get_operands(hand)
+                table.insert(eval_queue[hand], op1 - op2)
+            elseif token == '*' then
+                local op1, op2 = get_operands(hand)
+                table.insert(eval_queue[hand], op1 * op2)
+            elseif token == '^' then
+                local op1, op2
+                 = get_operands(hand)
+                table.insert(eval_queue[hand], op1 ^ op2)
+            else
+                table.insert(eval_queue[hand], token)
+            end
+        end
+    end
+
+    eval_hand 'left'
+    eval_hand 'right'
+    return { left = eval_queue.left[1], right = eval_queue.right[1] }
+end
+
+return { parse_expression, mount_letter_map, evaluate }
