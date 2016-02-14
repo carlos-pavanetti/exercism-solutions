@@ -4,14 +4,13 @@ local allergenic_list = {
 }
 
 local function allergic_to(score, allergenic)
-    local allergenic_score = 1
     for _, value in ipairs(allergenic_list) do
         if value == allergenic then
-            break
+            return score & 1 ~= 0
         end
-        allergenic_score = allergenic_score << 1
+
+        score = score >> 1
     end
-    return score & allergenic_score == allergenic_score
 end
 
 local function list(score)
