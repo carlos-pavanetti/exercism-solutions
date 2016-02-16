@@ -14,24 +14,24 @@ reversed number = foldl (\acc x -> 10 * acc + x) 0 (digits number)
 isPalindromeProduct :: Integral a => (a, a) -> Bool
 isPalindromeProduct = isPalindrome . uncurry (*)
 
-palindromes :: Integral a => a -> a -> [(a, a)]
-palindromes lower upper = filter isPalindromeProduct factors
+palindromes :: Integral a => a -> a -> [(a, (a, a))]
+palindromes lower upper = [set a b | a<-range, b<-range, isPalindrome (a * b)]
     where
-        factors = [(a, b) | a<-range, b<-range]
         range = [lower..upper]
+        set a b = (a * b, (a, b))
 
 largestPalindrome :: Integral a => a -> a -> (a, [(a, a)])
 largestPalindrome lower upper = (largest, factors)
     where
-        largest = maximum $ map pairProd palindromesSet
-        factors = filter ((== largest) . pairProd) palindromesSet
-        pairProd = uncurry (*)
+        largest = maximum pairProducts
+        factors = [snd pair | pair<-palindromesSet, largest == fst pair]
+        pairProducts = map fst palindromesSet
         palindromesSet = palindromes lower upper
 
 smallestPalindrome :: Integral a => a -> a -> (a, [(a, a)])
 smallestPalindrome lower upper = (smallest, factors)
     where
-        smallest = minimum $ map pairProd palindromesSet
-        factors = filter ((== smallest) . pairProd) palindromesSet
-        pairProd = uncurry (*)
+        smallest = minimum pairProducts
+        factors = [snd pair | pair<-palindromesSet, smallest == fst pair]
+        pairProducts = map fst palindromesSet
         palindromesSet = palindromes lower upper
