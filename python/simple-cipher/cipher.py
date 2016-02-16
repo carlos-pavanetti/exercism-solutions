@@ -3,28 +3,6 @@ from string import ascii_lowercase
 from itertools import cycle
 
 
-def normalize_to_number(char):
-    remainder = ord('a') % 26
-    return (ord(char.lower()) - remainder) % 26
-
-
-def normalize_to_char(number):
-    ord_a = ord('a')
-    return chr(number % 26 + ord_a)
-
-
-def shift(char, key):
-    return normalize_to_char(key + normalize_to_number(char))
-
-
-class Caesar(object):
-    def encode(self, source):
-        return ''.join(shift(char, 3) for char in source if char.isalpha())
-
-    def decode(self, source):
-        return ''.join(shift(char, -3) for char in source)
-
-
 class Cipher(object):
     def __init__(self, key=''):
         self.key = key or Cipher.generate_random_key()
@@ -53,3 +31,22 @@ class Cipher(object):
 
     def is_key_valid(self):
         return self.key.isalpha() and self.key.islower()
+
+
+class Caesar(Cipher):
+    def __init__(self):
+        super(Caesar, self).__init__(key='d')
+
+
+def normalize_to_number(char):
+    remainder = ord('a') % 26
+    return (ord(char.lower()) - remainder) % 26
+
+
+def normalize_to_char(number):
+    ord_a = ord('a')
+    return chr(number % 26 + ord_a)
+
+
+def shift(char, key):
+    return normalize_to_char(key + normalize_to_number(char))
