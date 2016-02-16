@@ -1,11 +1,11 @@
-local allergenic_list = {
+local allergen_list = {
     'eggs', 'peanuts', 'shellfish', 'strawberries',
     'tomatoes', 'chocolate', 'pollen', 'cats',
 }
 
-local function allergic_to(score, allergenic)
-    for _, value in ipairs(allergenic_list) do
-        if value == allergenic then
+local function allergic_to(score, allergen)
+    for _, value in ipairs(allergen_list) do
+        if value == allergen then
             return score & 1 ~= 0
         end
 
@@ -15,9 +15,9 @@ end
 
 local function list(score)
     local allergies = {}
-    for _, allergenic in ipairs(allergenic_list) do
-        if allergic_to(score, allergenic) then
-            table.insert(allergies, allergenic)
+    for _, allergen in ipairs(allergen_list) do
+        if allergic_to(score, allergen) then
+            table.insert(allergies, allergen)
         end
     end
 
