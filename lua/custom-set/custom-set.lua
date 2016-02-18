@@ -40,21 +40,7 @@ set.difference = function(self, other)
 end
 
 set.symmetric_difference = function(self, other)
-    local sym_diff = set.new()
-
-    for key in self:items() do
-        if not other:contains(key) then
-            sym_diff:add(key)
-        end
-    end
-
-    for key in other:items() do
-        if not self:contains(key) then
-            sym_diff:add(key)
-        end
-    end
-
-    return sym_diff
+    return self:difference(other):union(other:difference(self))
 end
 
 set.intersection = function(self, other)
