@@ -1,18 +1,26 @@
-local vowels = { a = true, e = true, i = true, o = true, u = true, yt = true, xr = true }
 local specials_consonants = { ch = true, qu = true, th = true, thr = true, sch = true}
+
+function string.begin_with_any_of(word, patterns)
+    for _, pattern in ipairs(patterns) do
+        if word:find('^' .. pattern) then
+            return true
+        end
+    end
+end
+
+function string.reverse_split_at(str, pos)
+    return str:sub(pos + 1) .. str:sub(1, pos)
+end
 
 local function process_word(word)
     local first_letter, tail = word:match('(.)(.+)')
     local two_first_letters, rest_two = word:match('(..)(.+)')
-    local three_first_letters, rest_three = word:match('(...)(.+)')
-    if vowels[first_letter] or vowels[two_first_letters] then
+    if word:begin_with_any_of({ '[aeiou]', 'yt', 'xr' }) then
         return word .. 'ay'
-    elseif specials_consonants[three_first_letters] then
-        return (rest_three or '') .. three_first_letters .. 'ay'
-    elseif specials_consonants[two_first_letters] then
-        return (rest_two or '') .. two_first_letters .. 'ay'
-    elseif tail:match('^qu') then
-        return tail:sub(3) .. first_letter .. 'quay'
+    elseif word:begin_with_any_of({ '[^aeiou]qu', 'thr', 'sch' }) then
+        return word:reverse_split_at(3) .. 'ay'
+    elseif word:begin_with_any_of({ 'qu', 'ch', 'th' }) then
+        return word:reverse_split_at(2) .. 'ay'
     else
         return tail .. first_letter .. 'ay'
     end
