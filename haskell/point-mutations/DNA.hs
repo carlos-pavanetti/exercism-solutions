@@ -1,4 +1,4 @@
 module DNA(hammingDistance) where
 
 hammingDistance :: (Eq a) => [a] -> [a] -> Int
-hammingDistance = (sum .) . zipWith ((fromEnum .) . (==))
+hammingDistance = (sum .) . zipWith ((fromEnum .) . (/=))
