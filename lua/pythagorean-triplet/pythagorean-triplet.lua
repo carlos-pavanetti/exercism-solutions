@@ -20,6 +20,12 @@ local function triplets_with(options)
     local min_factor = options.min_factor or 3
     local max_factor = options.max_factor
 
+    local function is_in_constraints(abc)
+        local sum_abc = abc[1] + abc[2] + abc[3]
+        return abc[1] >= min_factor and abc[2] >= min_factor
+        and (not options.sum or options.sum == sum_abc)
+    end
+
     local m, n = 2, 1
     local a, b, c
 
@@ -30,17 +36,16 @@ local function triplets_with(options)
             b = 2 * m * n
             c = m^2 + n^2
             if c > max_factor then break end
-                for k = 1, max_factor/c do
-                    local abc = { k*a, k*b, k*c }
-                    if abc[1] >= min_factor and abc[2] >= min_factor then
-                    if not options.sum or options.sum == k*(a + b + c) then
-                        table.sort(abc)
-                        table.insert(triplets, abc)
-                    end
+
+            for k = 1, max_factor/c do
+                local abc = { k*a, k*b, k*c }
+                if is_in_constraints(abc) then
+                    table.sort(abc)
+                    table.insert(triplets, abc)
                 end
             end
             repeat
-                n = n + 2
+                n = n + 2 -- only same parity numbers
             until gcd(m, n) == 1 -- m & n must be coprimes
         end
 
