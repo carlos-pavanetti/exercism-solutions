@@ -1,4 +1,9 @@
-class ListResult(object):
+from enum import IntEnum
+
+
+class SublistType(IntEnum):
+    SUBLIST, SUPERLIST, EQUAL, UNEQUAL = range(4)
+
     def inverse(self):
         if self == SUBLIST:
             return SUPERLIST
@@ -6,10 +11,9 @@ class ListResult(object):
             return SUBLIST
         return self
 
-SUBLIST = ListResult()
-SUPERLIST = ListResult()
-EQUAL = ListResult()
-UNEQUAL = ListResult()
+
+SUBLIST, SUPERLIST = SublistType.SUBLIST, SublistType.SUPERLIST
+EQUAL, UNEQUAL = SublistType.EQUAL, SublistType.UNEQUAL
 
 
 def check_lists(A, B):
@@ -17,5 +21,7 @@ def check_lists(A, B):
         return check_lists(B, A).inverse()
     if A == B:
         return EQUAL
-    if A == B[:len(A)]:
-        return SUBLIST
+    for k in range(len(B) - len(A) + 1):
+        if A == B[k: len(A) + k]:
+            return SUBLIST
+    return UNEQUAL
