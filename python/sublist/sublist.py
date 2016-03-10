@@ -17,11 +17,16 @@ EQUAL, UNEQUAL = SublistType.EQUAL, SublistType.UNEQUAL
 
 
 def check_lists(A, B):
-    if len(A) > len(B):
+    length_a, length_b = len(A), len(B)
+
+    if length_a > length_b:
         return check_lists(B, A).inverse()
+
     if A == B:
         return EQUAL
-    for k in range(len(B) - len(A) + 1):
-        if A == B[k: len(A) + k]:
+
+    for k in range(length_b - length_a + 1):
+        if A == B[k: length_a + k]:
             return SUBLIST
+
     return UNEQUAL
