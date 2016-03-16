@@ -1,12 +1,6 @@
 var transcribes = function(nucleotide) {
-    if (nucleotide == 'A')
-        return 'U';
-    if (nucleotide == 'T')
-        return 'A';
-    if (nucleotide == 'G')
-        return 'C';
-    if (nucleotide == 'C')
-        return 'G';
+    var nucleotide_map = { 'A': 'U', 'T': 'A', 'G': 'C', 'C': 'G' };
+    return nucleotide_map[nucleotide];
 }
 
 var DnaTranscriber = function() {}
