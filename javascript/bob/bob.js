@@ -1,7 +1,14 @@
 var Bob = function() {};
 
 Bob.prototype.hey = function(input) {
-    return 'Whatever.'
+    input = input.trim();
+    if (input === '')
+        return 'Fine. Be that way!';
+    if (input === input.toUpperCase())
+        return 'Whoa, chill out!';
+    if (input.slice(-1) === '?')
+        return 'Sure.';
+    return 'Whatever.';
 };
 
 module.exports = Bob;
