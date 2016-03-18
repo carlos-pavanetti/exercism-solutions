@@ -18,10 +18,10 @@ local generate_robot_name = function()
     local new_name
     repeat
         local name_chars = {}
-        for letter = 1, NUM_LETTERS do
+        for _ = 1, NUM_LETTERS do
             insert(name_chars, generate_random_letter())
         end
-        for digit = 1, NUM_DIGITS do
+        for _ = 1, NUM_DIGITS do
             insert(name_chars, generate_random_digit())
         end
         new_name = concat(name_chars)
