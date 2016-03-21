@@ -19,13 +19,12 @@ function robot:move(command)
         elseif movement == 'A' then
             self:advance()
         else
-            error('')
+            error('Invalid movement ' .. movement)
         end
     end
 end
 
 local clockwise = { north = 1, east = 2, south = 3, west = 0 }
--- local counter_clockwise = { north = 1, west = 2, south = 3, west = 0 }
 
 function robot:turn_right()
     local new_heading_value = (clockwise[self.heading] + 1) % 4
